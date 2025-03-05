@@ -93,6 +93,23 @@ void pvars_command(ns::Context& ctx) {
 	ns::printf(ns::PrintLevel::ECHO, vars.str());
 }
 
+void scripts_command(ns::Context& ctx) {
+	if (!std::filesystem::is_directory("./scripts")) {
+		ns::print(ns::PrintLevel::ECHO, "Scripts folder is empty\n");
+		return;
+	}
+
+	std::stringstream out;
+	for (const auto & entry : std::filesystem::directory_iterator("./scripts")) {
+		if (entry.is_directory())
+			continue;
+
+        out << entry.path() << '\n';
+	}
+
+	ns::print(ns::PrintLevel::ECHO, out.str());
+}
+
 int main() {
 	ns::setPrintCallback(nullptr, nikiscriptPrintCallback);
 	ns::maxConsoleVariableCalls = 10;
@@ -104,6 +121,7 @@ int main() {
 	ctx.commands.add(ns::Command("save", 1,1, save_command, "saves console variables in a file", {"s[fileName]", "file to store data"}));
 	ctx.commands.add(ns::Command("vars", 0,0, vars_command, "prints out current stored console variables and their values", {}));
 	ctx.commands.add(ns::Command("pvars", 0,0, pvars_command, "prints out current stored program variables and their values", {}));
+	ctx.commands.add(ns::Command("scripts", 0,0, scripts_command, "prints out scripts folder content", {}));
 
 	ns::Lexer lexer;
 	ctx.pLexer = &lexer;
