@@ -22,7 +22,7 @@ jobs:
         run: pip install discord.py
 
       - name: Make script executable
-        run: chmod +x my_program.sh  # Change filename as needed
+        run: chmod +x NikiCMD  # Change filename as needed
 
       - name: Run bot
         env:
