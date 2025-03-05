@@ -5,6 +5,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+CHANNEL_ID = 1293321381181788261 # allowed channel to use commands
+GUILD_ID = 1293321380863021159
+OWNER_ID = 309806482084462592
+CLIENT_ID = 1346652392350945310
+
+def isOwner(interaction: discord.Interaction):
+	return interaction.user.id == OWNER_ID
+
 nikicmdProcess = subprocess.Popen(
     ["./NikiCMD"],
     stdin=subprocess.PIPE, 
@@ -13,7 +21,7 @@ nikicmdProcess = subprocess.Popen(
     text=True,
 )
 
-async def handleNikiCMDProcess(script: str):
+def handleNikiCMDProcess(script: str):
 	while True:
 		output = nikicmdProcess.stdout.readline()
 		if not output:
@@ -38,55 +46,46 @@ async def handleNikiCMDProcess(script: str):
 
 	return message
 
-async def runNikiScript(message: discord.Message):
+def runNikiScript(script: str):
 	try:
-		inputMessage = message.content[8:]
-		response = '**IN:**\n```' + inputMessage + '```\n**OUT:**```cpp\n' + await handleNikiCMDProcess(inputMessage) + '```'
-
-		await message.channel.send(response)
+		return handleNikiCMDProcess(script)
 	except subprocess.TimeoutExpired:
-		await message.channel.send("Execution timed out!")
+		return "Execution timed out!"
 	except Exception as e:
-		await message.channel.send(f"Error: {e}")
+		return f"Error: {e}"
 
 class NikiBot(discord.Client):
 	async def on_ready(self):
+		await tree.sync()
 		print(f'Logged on as {self.user}!')
-
-	async def on_message(self, message: discord.Message):
-		if not message.content.startswith('.'):
-			return
-
-		args = message.content.split(' ')
-
-		command = args[0]
-		if len(command) == 1:
-			return
-		command = command[1:]
-
-		if len(args) > 0:
-			args = args[1:]
-
-		if command == 'niki':
-			await message.channel.send('https://github.com/SuadoCowboy/NikiScript')
-
-		elif command == 'script' and len(args) != 0:
-			runNikiScript(message)
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.dm_messages = True
 
 client = NikiBot(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
 @tree.command(
-    name="script",
-    description="Parses NikiScript",
-    guild=discord.Object(id=1293321380863021159)
+    name="nikiscript",
+    description="Interprets text as NikiScript"
 )
-async def script(interaction: discord.Interaction):
-	print(interaction.message.content)
-	await interaction.response.send_message("Hello!")
+async def script(interaction: discord.Interaction, text: str):
+	if interaction.user.id != OWNER_ID:
+		if interaction.guild_id != GUILD_ID:
+			await interaction.response.send_message("Can't run outside JIKARU lol. Do the L.", ephemeral=True)
+			return
 
+		elif interaction.channel_id != CHANNEL_ID:
+			await interaction.response.send_message(f"Can not run nikiscript here. Try on <#{CHANNEL_ID}> instead.", ephemeral=True)
+			return
+
+	await interaction.response.defer(ephemeral=interaction.channel_id != CHANNEL_ID, thinking=True)
+
+	embed = discord.Embed(color=discord.Colour(0xffc6ff))
+	embed.add_field(name="In", value=f'```{text}```', inline=False)
+	embed.add_field(name="Out", value=f'```{runNikiScript(text)}```', inline=False)
+
+	await interaction.edit_original_response(embed=embed)
 
 client.run(os.getenv('DISCORD_BOT_TOKEN'))
