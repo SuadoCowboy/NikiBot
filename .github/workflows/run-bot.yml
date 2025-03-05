@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: pip install discord.py
 
+      - name: Make script executable
+        run: chmod +x my_program.sh  # Change filename as needed
+
       - name: Run bot
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}  # Use GitHub Secret for safety
