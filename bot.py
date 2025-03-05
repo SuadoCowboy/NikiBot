@@ -1,6 +1,9 @@
 import discord
 import subprocess
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 nikicmdProcess = subprocess.Popen(
     ["./NikiCMD"],
@@ -78,4 +81,4 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = NikiBot(intents=intents)
-client.run(os.environ['DISCORD_BOT_TOKEN'])
+client.run(os.getenv('DISCORD_BOT_TOKEN'))
