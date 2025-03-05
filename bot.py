@@ -69,13 +69,6 @@ class NikiBot(discord.Client):
 				await message.channel.send("Execution timed out!")
 			except Exception as e:
 				await message.channel.send(f"Error: {e}")
-		elif command == 'list':
-			content = '**FILES:**\n'
-			for file in os.listdir('scripts'):
-				content += f'- {file}\n'
-			content = content[:-1]
-
-			await message.channel.send(content)
 
 intents = discord.Intents.default()
 intents.message_content = True
