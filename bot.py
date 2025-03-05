@@ -78,4 +78,4 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = NikiBot(intents=intents)
-client.run(os.environ['TOKEN'])
+client.run(os.environ['DISCORD_BOT_TOKEN'])
