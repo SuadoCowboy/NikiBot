@@ -13,7 +13,7 @@ nikicmdProcess = subprocess.Popen(
     text=True,
 )
 
-async def runNikiScript(script: str):
+async def handleNikiCMDProcess(script: str):
 	while True:
 		output = nikicmdProcess.stdout.readline()
 		if not output:
@@ -38,11 +38,22 @@ async def runNikiScript(script: str):
 
 	return message
 
+async def runNikiScript(message: discord.Message):
+	try:
+		inputMessage = message.content[8:]
+		response = '**IN:**\n```' + inputMessage + '```\n**OUT:**```cpp\n' + await handleNikiCMDProcess(inputMessage) + '```'
+
+		await message.channel.send(response)
+	except subprocess.TimeoutExpired:
+		await message.channel.send("Execution timed out!")
+	except Exception as e:
+		await message.channel.send(f"Error: {e}")
+
 class NikiBot(discord.Client):
 	async def on_ready(self):
 		print(f'Logged on as {self.user}!')
 
-	async def on_message(self, message):
+	async def on_message(self, message: discord.Message):
 		if not message.content.startswith('.'):
 			return
 
@@ -60,18 +71,22 @@ class NikiBot(discord.Client):
 			await message.channel.send('https://github.com/SuadoCowboy/NikiScript')
 
 		elif command == 'script' and len(args) != 0:
-			try:
-				inputMessage = message.content[8:]
-				response = '**IN:**\n```' + inputMessage + '```\n**OUT:**```cpp\n' + await runNikiScript(inputMessage) + '```'
-
-				await message.channel.send(response)
-			except subprocess.TimeoutExpired:
-				await message.channel.send("Execution timed out!")
-			except Exception as e:
-				await message.channel.send(f"Error: {e}")
+			runNikiScript(message)
 
 intents = discord.Intents.default()
 intents.message_content = True
 
 client = NikiBot(intents=intents)
+tree = discord.app_commands.CommandTree(client)
+
+@tree.command(
+    name="script",
+    description="Parses NikiScript",
+    guild=discord.Object(id=1293321380863021159)
+)
+async def script(interaction: discord.Interaction):
+	print(interaction.message.content)
+	await interaction.response.send_message("Hello!")
+
+
 client.run(os.getenv('DISCORD_BOT_TOKEN'))
