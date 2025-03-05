@@ -19,7 +19,7 @@ jobs:
           python-version: "3.x"
 
       - name: Install dependencies
-        run: pip install discord.py
+        run: pip install -r requirements.txt
 
       - name: Make script executable
         run: chmod +x NikiCMD  # Change filename as needed
