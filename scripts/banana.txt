@@ -1,2 +1,0 @@
-echo ez banana
-var (ez,echo ez banana)
