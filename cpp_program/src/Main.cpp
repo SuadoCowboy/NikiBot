@@ -58,10 +58,21 @@ void save_command(ns::Context& ctx) {
 
 	path = "./scripts/"+path;
 
-	std::ofstream file{path, std::ios_base::app};
+	ns::Context tempCtx = ns::copyContext(ctx);
+	ns::parseFile(tempCtx, path.c_str(), false);
+
+	std::ofstream file{path};
 	for (auto& variable : ctx.consoleVariables) {
+		if (tempCtx.consoleVariables.count(variable.first) != 0) {
+			tempCtx.consoleVariables[variable.first] = variable.second;
+			break;
+		}
+
 		file << "var (" << variable.first << "," << variable.second << ")\n";
 	}
+
+	for (auto& variable : tempCtx.consoleVariables)
+		file << "var (" << variable.first << "," << variable.second << ")\n";
 
 	ns::printf(ns::PrintLevel::ECHO, "Stored variables in \"{}\"", path);
 }
