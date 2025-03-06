@@ -70,6 +70,7 @@ tree = discord.app_commands.CommandTree(client)
     name="nikiscript",
     description="Interprets text as NikiScript"
 )
+@discord.app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 async def script(interaction: discord.Interaction, text: str):
 	if interaction.user.id != OWNER_ID:
 		if interaction.guild_id != GUILD_ID:
