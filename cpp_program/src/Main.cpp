@@ -3,9 +3,9 @@
 #include <filesystem>
 
 #include <nikiscript/PrintCallback.h>
-#include <nikiscript/Context.h>
 #include <nikiscript/Parser.h>
-#include <nikiscript/NikiScript.h>
+
+#include <Commands.h>
 
 void nikiscriptPrintCallback(void*, ns::PrintLevel level, const std::string& message) {
 	switch (level) {
@@ -28,100 +28,12 @@ void nikiscriptPrintCallback(void*, ns::PrintLevel level, const std::string& mes
 	std::cout << message;
 }
 
-bool isValidFileName(const std::string& name) {
-	for (size_t i = 0; i < name.size(); ++i) {
-		if (isspace(name[i]) || name[i] == '\\' || name[i] == '/' || (i+1 < name.size() && name[i] == '.' && name[i+1] == '.')) {
-			ns::printf(ns::PrintLevel::ERROR, "Invalid name {}\n", name);
-			return false;
-		}
-	}
-	return true;
-}
-
-void exec_command(ns::Context& ctx) {
-	std::string& path = ctx.arguments.getString();
-
-	if (!isValidFileName(path))
-		return;
-
-	path = "./scripts/"+path;
-	ns::parseFile(ctx, path.c_str(), true);
-}
-
-void save_command(ns::Context& ctx) {
-	if (!std::filesystem::is_directory("./scripts"))
-		std::filesystem::create_directory("./scripts");
-
-	std::string& path = ctx.arguments.getString();
-	if (!isValidFileName(path))
-		return;
-
-	path = "./scripts/"+path;
-
-	ns::Context tempCtx = ns::copyContext(ctx);
-	ns::parseFile(tempCtx, path.c_str(), false);
-
-	std::ofstream file{path};
-	for (auto& variable : ctx.consoleVariables) {
-		if (tempCtx.consoleVariables.count(variable.first) != 0) {
-			tempCtx.consoleVariables[variable.first] = variable.second;
-			break;
-		}
-
-		file << "var (" << variable.first << "," << variable.second << ")\n";
-	}
-
-	for (auto& variable : tempCtx.consoleVariables)
-		file << "var (" << variable.first << "," << variable.second << ")\n";
-
-	ns::printf(ns::PrintLevel::ECHO, "Stored variables in \"{}\"", path);
-}
-
-void vars_command(ns::Context& ctx) {
-	std::stringstream vars;
-	for (auto& var : ctx.consoleVariables)
-		vars << var.first << " = " << var.second << '\n';
-
-	ns::printf(ns::PrintLevel::ECHO, vars.str());
-}
-
-void pvars_command(ns::Context& ctx) {
-	std::stringstream vars;
-	for (auto& var : ctx.programVariables)
-		vars << var.first << " = " << var.second.get(&var.second) << '\n';
-
-	ns::printf(ns::PrintLevel::ECHO, vars.str());
-}
-
-void scripts_command(ns::Context& ctx) {
-	if (!std::filesystem::is_directory("./scripts")) {
-		ns::print(ns::PrintLevel::ECHO, "Scripts folder is empty\n");
-		return;
-	}
-
-	std::stringstream out;
-	for (const auto & entry : std::filesystem::directory_iterator("./scripts")) {
-		if (entry.is_directory())
-			continue;
-
-        out << entry.path() << '\n';
-	}
-
-	ns::print(ns::PrintLevel::ECHO, out.str());
-}
-
 int main() {
 	ns::setPrintCallback(nullptr, nikiscriptPrintCallback);
 	ns::maxConsoleVariableCalls = 10;
 
 	ns::Context ctx;
-	ns::registerCommands(ctx);
-	ctx.commands.remove("exec", ctx);
-	ctx.commands.add(ns::Command("exec", 1,1, exec_command, "parses a script file", {"s[fileName]", "file to parse"}));
-	ctx.commands.add(ns::Command("save", 1,1, save_command, "saves console variables in a file", {"s[fileName]", "file to store data"}));
-	ctx.commands.add(ns::Command("vars", 0,0, vars_command, "prints out current stored console variables and their values", {}));
-	ctx.commands.add(ns::Command("pvars", 0,0, pvars_command, "prints out current stored program variables and their values", {}));
-	ctx.commands.add(ns::Command("scripts", 0,0, scripts_command, "prints out scripts folder content", {}));
+	registerCommands(ctx);
 
 	ns::Lexer lexer;
 	ctx.pLexer = &lexer;
