@@ -8,6 +8,7 @@ on:
 
 jobs:
   run-bot:
+    environment: bot
     runs-on: ubuntu-latest  # Use Linux for lightweight execution
     steps:
       - name: Check out repository
@@ -27,4 +28,5 @@ jobs:
       - name: Run bot
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}  # Use GitHub Secret for safety
+		  DISCORD_BOT_OWNERS: ${{ secrets.DISCORD_BOT_OWNERS }}
         run: python bot.py
