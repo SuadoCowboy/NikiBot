@@ -1,9 +1,7 @@
 import discord
-import subprocess
 import os
-import commands
 from constants import *
-from niki import *
+from niki_process import *
 
 startNikiCMD()
 
