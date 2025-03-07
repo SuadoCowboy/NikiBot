@@ -122,7 +122,7 @@ void dc_command(ns::Context& ctx) {
 
 void rcon_command(ns::Context& ctx) {
 	if (!isUserOwner())
-		return
+		return;
 
 	system(ctx.arguments.getString().c_str());
 }
