@@ -124,5 +124,5 @@ void rcon_command(ns::Context& ctx) {
 	if (!isUserOwner())
 		return
 
-	system(ctx.arguments.getString());
+	system(ctx.arguments.getString().c_str());
 }
