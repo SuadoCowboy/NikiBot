@@ -11,6 +11,15 @@
 bool isOwner = false;
 std::string discord;
 
+static bool isUserOwner() {
+	if (!isOwner) {
+		ns::print(ns::PrintLevel::ERROR, "You don't have permission to use this command");
+		return false;
+	}
+
+	return true;
+}
+
 static bool isValidFileName(const std::string& name) {
 	for (size_t i = 0; i < name.size(); ++i) {
 		if (isspace(name[i]) || name[i] == '\\' || name[i] == '/' || (i+1 < name.size() && name[i] == '.' && name[i+1] == '.')) {
@@ -30,7 +39,8 @@ void registerCommands(ns::Context& ctx) {
 	ctx.commands.add(ns::Command("pvars", 0,0, pvars_command, "prints out current stored program variables and their values", {}));
 	ctx.commands.add(ns::Command("scripts", 0,0, scripts_command, "prints out scripts folder content", {}));
 
-	ctx.commands.add(ns::Command("dc", 1,1, dc_command, "SUADO É VIADOOO passes a string for the bot to run", {"s[text]", "text to pass as a command"}));
+	ctx.commands.add(ns::Command("dc", 1,1, dc_command, "passes a string for the bot to run", {"s[text]", "text to pass as a command"}));
+	ctx.commands.add(ns::Command("rcon", 1,1, rcon_command, "run system command", {"s[text]", "text to run on environment"}));
 }
 
 void exec_command(ns::Context& ctx) {
@@ -105,6 +115,14 @@ void scripts_command(ns::Context& ctx) {
 	ns::print(ns::PrintLevel::ECHO, out.str());
 }
 
+
 void dc_command(ns::Context& ctx) {
 	discord += ctx.arguments.getString() + '\n';
+}
+
+void rcon_command(ns::Context& ctx) {
+	if (!isUserOwner())
+		return
+
+	system(ctx.arguments.getString());
 }
