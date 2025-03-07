@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string_view>
+
 #include "Context.h"
 
 namespace ns {
@@ -31,5 +33,5 @@ namespace ns {
 	 */
 	void registerCommands(Context& ctx);
 
-	void registerVariable(Context& ctx, const std::string& name, void* pVar, const GetProgramVariableValue& get, const SetProgramVariableValue& set);
+	void registerVariable(Context& ctx, const std::string& name, const std::string_view& description, void* pVar, const GetProgramVariableValue& get, const SetProgramVariableValue& set);
 }
