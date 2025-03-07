@@ -26,3 +26,13 @@ jobs:
 
       - name: Move to root
         run: mv cpp_program/build/NikiCMD ./NikiCMD
+
+      - name: Commit and push executable
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add NikiCMD
+          git commit -m "Update NikiCMD"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
