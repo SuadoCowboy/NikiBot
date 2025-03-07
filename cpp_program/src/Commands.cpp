@@ -30,7 +30,7 @@ void registerCommands(ns::Context& ctx) {
 	ctx.commands.add(ns::Command("pvars", 0,0, pvars_command, "prints out current stored program variables and their values", {}));
 	ctx.commands.add(ns::Command("scripts", 0,0, scripts_command, "prints out scripts folder content", {}));
 
-	ctx.commands.add(ns::Command("dc", 1,1, dc_command, "passes a string for the bot to run", {"s[text]", "text to pass as a command"}));
+	ctx.commands.add(ns::Command("dc", 1,1, dc_command, "SUADO É VIADOOO passes a string for the bot to run", {"s[text]", "text to pass as a command"}));
 }
 
 void exec_command(ns::Context& ctx) {
