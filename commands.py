@@ -1,7 +1,7 @@
 import discord
 
 async def say_command(interaction: discord.Interaction, command: str, args: list[str], isOwner: bool):
-	if not interaction.app_permissions.send_messages or not isOwner:
+	if not interaction.app_permissions.send_messages and not isOwner:
 		return
 
 	out = ''
@@ -11,7 +11,7 @@ async def say_command(interaction: discord.Interaction, command: str, args: list
 	await interaction.channel.send(content=out.replace('@everyone', 'no u').replace('@here', 'nope'))
 
 async def help_command(interaction: discord.Interaction, _command: str, _args: list[str], isOwner: bool):
-	if not interaction.app_permissions.send_messages or not isOwner:
+	if not interaction.app_permissions.send_messages and not isOwner:
 		return
 
 	out = '```lua\n'
