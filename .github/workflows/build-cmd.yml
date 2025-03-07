@@ -1,7 +1,11 @@
 name: Make NikiCMD
 
 on:
-  workflow_dispatch:  # Allows you to manually trigger it
+  push:
+    paths:
+      - cpp_program/src/**
+      - cpp_program/libs/**
+      - cpp_program/include/**
 
 jobs:
   build-project:
