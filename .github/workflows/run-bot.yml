@@ -1,9 +1,6 @@
 name: Run Discord Bot
 
 on:
-  push:
-    branches:
-      - main  # Change to your branch name if needed
   workflow_dispatch:  # Allows you to manually trigger it
 
 jobs:
