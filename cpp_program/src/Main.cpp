@@ -45,7 +45,7 @@ int main() {
 
 	ns::Context ctx;
 	::registerCommands(ctx);
-	ns::registerVariable(ctx, "cvars_calls_max", &ns::maxConsoleVariableCalls, getUint64_t, setUint64_t);
+	ns::registerVariable(ctx, "cvars_calls_max", "how many variables can be called inside each other", &ns::maxConsoleVariableCalls, getUint64_t, setUint64_t);
 
 	ns::Lexer lexer;
 	ctx.pLexer = &lexer;
