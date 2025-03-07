@@ -1,0 +1,28 @@
+name: Make NikiCMD
+
+on:
+  push:
+    branches:
+      - main  # Change to your branch name if needed
+  workflow_dispatch:  # Allows you to manually trigger it
+
+jobs:
+  build-project:
+    name: Build Project
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4.2.2
+
+      - name: Build Project
+        uses: threeal/cmake-action@v2.1.0
+        with:
+            generator: Unix Makefiles
+            source-dir: cpp_program
+            build-dir: cpp_program/build
+            options: |
+                CMAKE_BUILD_TYPE=Release
+
+      - name: Move to root
+        run: mv cpp_program/build/NikiCMD ./NikiCMD
