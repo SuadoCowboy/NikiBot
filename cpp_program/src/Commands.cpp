@@ -8,6 +8,9 @@
 #include <nikiscript/Parser.h>
 #include <nikiscript/NikiScript.h>
 
+bool isOwner = false;
+std::string discord;
+
 static bool isValidFileName(const std::string& name) {
 	for (size_t i = 0; i < name.size(); ++i) {
 		if (isspace(name[i]) || name[i] == '\\' || name[i] == '/' || (i+1 < name.size() && name[i] == '.' && name[i+1] == '.')) {
@@ -26,6 +29,8 @@ void registerCommands(ns::Context& ctx) {
 	ctx.commands.add(ns::Command("vars", 0,0, vars_command, "prints out current stored console variables and their values", {}));
 	ctx.commands.add(ns::Command("pvars", 0,0, pvars_command, "prints out current stored program variables and their values", {}));
 	ctx.commands.add(ns::Command("scripts", 0,0, scripts_command, "prints out scripts folder content", {}));
+
+	ctx.commands.add(ns::Command("dc", 1,1, dc_command, "passes a string for the bot to run", {"s[text]", "text to pass as a command"}));
 }
 
 void exec_command(ns::Context& ctx) {
@@ -98,4 +103,8 @@ void scripts_command(ns::Context& ctx) {
 	}
 
 	ns::print(ns::PrintLevel::ECHO, out.str());
+}
+
+void dc_command(ns::Context& ctx) {
+	discord += ctx.arguments.getString() + '\n';
 }
