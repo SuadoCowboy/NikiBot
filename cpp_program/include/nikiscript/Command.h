@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string_view>
+#include <string>
 
 namespace ns {
 	struct Context;

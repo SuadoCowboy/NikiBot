@@ -6,7 +6,7 @@
 #include "Utils.h"
 
 namespace ns {
-	enum class PrintLevel : uint8_t {
+	enum PrintLevel : uint8_t {
 		DEFAULT = 0, ///< any user input
 		ECHO, ///< any text that came from a command that is not an error
 		WARNING, ///< anything that is wrong but can continue

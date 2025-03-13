@@ -67,6 +67,7 @@ namespace ns {
 	 * @note I find this algorithm very interesting and fun(it creates a bunch of lexers for each variable call instead of recursive calling)
 	 * @see ns::maxConsoleVariableCalls
 	 * @param ctx
+	 * @param pProgramVar
 	 */
 	void handleConsoleVariableCall(Context& ctx, ProgramVariable*& pProgramVar);
 
