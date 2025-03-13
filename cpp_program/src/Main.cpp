@@ -31,21 +31,13 @@ void nikiscriptPrintCallback(void*, ns::PrintLevel level, const std::string& mes
 	std::cout << message;
 }
 
-std::string getUint64_t(ns::ProgramVariable *pVar) {
-	return std::to_string(*static_cast<uint64_t*>(pVar->pValue));
-}
-
-void setUint64_t(ns::ProgramVariable* pVar, const std::string& str) {
-	if (isOwner) *static_cast<uint64_t*>(pVar->pValue) = std::stoull(str);
-}
-
 int main() {
 	ns::setPrintCallback(nullptr, nikiscriptPrintCallback);
 	ns::maxConsoleVariableCalls = 10;
 
 	ns::Context ctx;
 	::registerCommands(ctx);
-	ns::registerVariable(ctx, "cvars_calls_max", "how many variables can be called inside each other", &ns::maxConsoleVariableCalls, getUint64_t, setUint64_t);
+	ns::registerVariable(ctx, "cvars_calls_max", "how many variables can be called inside each other", &ns::maxConsoleVariableCalls, ns::getNumber<uint64_t>, ns::setUnsigned<uint64_t>);
 
 	ns::Lexer lexer;
 	ctx.pLexer = &lexer;

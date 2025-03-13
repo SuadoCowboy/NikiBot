@@ -93,7 +93,7 @@ void vars_command(ns::Context& ctx) {
 void pvars_command(ns::Context& ctx) {
 	std::stringstream vars;
 	for (auto& var : ctx.programVariables)
-		vars << var.first << " = " << var.second.get(&var.second) << '\n';
+		vars << var.first << " = " << var.second.get(ctx, &var.second) << '\n';
 
 	ns::printf(ns::PrintLevel::ECHO, vars.str());
 }
