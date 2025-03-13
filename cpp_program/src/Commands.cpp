@@ -115,7 +115,6 @@ void scripts_command(ns::Context& ctx) {
 	ns::print(ns::PrintLevel::ECHO, out.str());
 }
 
-
 void dc_command(ns::Context& ctx) {
 	discord += ctx.arguments.getString() + '\n';
 }
