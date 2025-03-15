@@ -47,7 +47,7 @@ namespace ns {
 	 */
 	template<typename ... Args>
 	std::string formatString(const std::string& format, Args ... args) {
-		std::stringstream buf;
+		std::stringstream buf{};
 		_formatStringValue(format, buf, args...);
 		return buf.str();
 	}
