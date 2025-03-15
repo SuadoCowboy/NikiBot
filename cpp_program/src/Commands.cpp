@@ -1,8 +1,8 @@
-#include <Commands.h>
+#include "Commands.h"
 
 #include <filesystem>
+#include <sstream>
 #include <fstream>
-#include <string>
 
 #include <nikiscript/PrintCallback.h>
 #include <nikiscript/Parser.h>
@@ -122,8 +122,8 @@ void ex_command(ns::Context& ctx) {
 		return;
 	}
 
+	std::stringstream out;
 	if (ctx.arguments.arguments.size() == 0) {
-		std::stringstream out;
 		for (const auto& entry : std::filesystem::directory_iterator("./examples"))
 			out << entry.path().filename() << '\n';
 
@@ -143,15 +143,15 @@ void ex_command(ns::Context& ctx) {
 		return;
 	}
 
-	std::stringstream input;
-	input << "SCRIPT:\n";
+	out << "SCRIPT:\n";
 	while (file.good()) {
 		std::string line = "";
 		std::getline(file, line);
-		input << line << '\n';
+		out << line;
 	}
+	out << '\n';
 
-	ns::printf(ns::PrintLevel::ECHO, input.str());
+	ns::printf(ns::PrintLevel::ECHO, out.str());
 	ns::parseFile(ctx, path.c_str(), true);
 }
 
