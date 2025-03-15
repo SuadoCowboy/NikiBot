@@ -14,6 +14,7 @@ void save_command(ns::Context& ctx);
 void vars_command(ns::Context& ctx);
 void pvars_command(ns::Context& ctx);
 void scripts_command(ns::Context& ctx);
+void ex_command(ns::Context& ctx); // ex = example
 
 void dc_command(ns::Context& ctx);
 void rcon_command(ns::Context& ctx);

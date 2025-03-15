@@ -38,6 +38,7 @@ void registerCommands(ns::Context& ctx) {
 	ctx.commands.add(ns::Command("vars", 0,0, vars_command, "prints out current stored console variables and their values", {}));
 	ctx.commands.add(ns::Command("pvars", 0,0, pvars_command, "prints out current stored program variables and their values", {}));
 	ctx.commands.add(ns::Command("scripts", 0,0, scripts_command, "prints out scripts folder content", {}));
+	ctx.commands.add(ns::Command("ex", 0,1, ex_command, "shows examples or run the chosen example", {"s[path]", "path to example"}));
 
 	ctx.commands.add(ns::Command("dc", 1,1, dc_command, "passes a string for the bot to run", {"s[text]", "text to pass as a command"}));
 	ctx.commands.add(ns::Command("rcon", 1,1, rcon_command, "run system command", {"s[text]", "text to run on environment"}));
@@ -105,7 +106,7 @@ void scripts_command(ns::Context& ctx) {
 	}
 
 	std::stringstream out;
-	for (const auto & entry : std::filesystem::directory_iterator("./scripts")) {
+	for (const auto& entry : std::filesystem::directory_iterator("./scripts")) {
 		if (entry.is_directory())
 			continue;
 
@@ -114,6 +115,30 @@ void scripts_command(ns::Context& ctx) {
 
 	ns::print(ns::PrintLevel::ECHO, out.str());
 }
+
+void ex_command(ns::Context& ctx) {
+	if (!std::filesystem::is_directory("./examples")) {
+		ns::print(ns::PrintLevel::ECHO, "Examples folder is empty\n");
+		return;
+	}
+
+	if (ctx.arguments.arguments.size() == 0) {
+		std::stringstream out;
+		for (const auto& entry : std::filesystem::recursive_directory_iterator("./examples"))
+			out << entry.path() << '\n';
+
+		ns::print(ns::PrintLevel::ECHO, out.str());
+		return;
+	}
+
+	std::string& path = ctx.arguments.getString();
+	if (!isValidFileName(path))
+		return;
+
+	path = "./examples/"+path;
+	ns::parseFile(ctx, path.c_str(), true);
+}
+
 
 void dc_command(ns::Context& ctx) {
 	discord += ctx.arguments.getString() + '\n';
