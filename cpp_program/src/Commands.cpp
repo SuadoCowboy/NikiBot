@@ -124,8 +124,8 @@ void ex_command(ns::Context& ctx) {
 
 	if (ctx.arguments.arguments.size() == 0) {
 		std::stringstream out;
-		for (const auto& entry : std::filesystem::recursive_directory_iterator("./examples"))
-			out << entry.path() << '\n';
+		for (const auto& entry : std::filesystem::directory_iterator("./examples"))
+			out << entry.path().filename() << '\n';
 
 		ns::print(ns::PrintLevel::ECHO, out.str());
 		return;
@@ -136,6 +136,22 @@ void ex_command(ns::Context& ctx) {
 		return;
 
 	path = "./examples/"+path;
+
+	std::ifstream file{path};
+	if (!file) {
+		ns::printf(ns::PrintLevel::ERROR, "Could not load file \"{}\"\n", path);
+		return;
+	}
+
+	std::stringstream input;
+	input << "SCRIPT:\n";
+	while (file.good()) {
+		std::string line = "";
+		std::getline(file, line);
+		input << line << '\n';
+	}
+
+	ns::printf(ns::PrintLevel::ECHO, input.str());
 	ns::parseFile(ctx, path.c_str(), true);
 }
 
