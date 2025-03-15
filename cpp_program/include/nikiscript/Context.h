@@ -28,19 +28,36 @@ namespace ns {
 	struct Context;
 
 	struct Arguments {
-		std::vector<std::string> arguments;
+		std::vector<std::string> arguments{};
 		uint8_t offset = 0;
 
 		std::string& getString();
 
-		template<typename T>
-		T getInteger();
-		template<typename T>
-		T getUnsignedInteger();
-
 		float getFloat();
 		double getDouble();
 		long double getLongDouble();
+
+		long getLong();
+		long long getLongLong();
+		unsigned long long getUnsignedLongLong();
+
+		/**
+		 * @brief uses std::stoul so any number below that can be used
+		 * @tparam T number type
+		 */
+		template<typename T>
+		T getUnsigned() {
+			return std::stoul(arguments[offset++]);
+		}
+
+		/**
+		 * @brief uses std::stoi so any number below that can be used
+		 * @tparam T
+		 */
+		template<typename T>
+		T getSigned() {
+			return T(std::stoi(arguments[offset++]));
+		}
 
 		/**
 		 * @brief clears arguments vector and sets offset to 0
@@ -88,16 +105,6 @@ namespace ns {
 	 * @param source object to copy content from
 	 */
 	Context copyContext(const Context& source);
-}
-
-template<typename T>
-T ns::Arguments::getInteger() {
-	return std::stoll(arguments[offset++]);
-}
-
-template <typename T>
-T ns::Arguments::getUnsignedInteger() {
-	return std::stoull(arguments[offset++]);
 }
 
 uint8_t operator|(ns::OriginType l, ns::OriginType r);

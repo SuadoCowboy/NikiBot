@@ -5,6 +5,10 @@
 
 #include "Token.h"
 
+#ifndef NIKISCRIPT_ESCAPE_NEXT_CHAR
+#define NIKISCRIPT_ESCAPE_NEXT_CHAR '\\'
+#endif
+
 #ifndef NIKISCRIPT_STATEMENT_SEPARATOR
 #define NIKISCRIPT_STATEMENT_SEPARATOR ';'
 #endif
@@ -39,6 +43,10 @@
 
 #ifndef NIKISCRIPT_COMMENT_LINES // Joined together with NIKISCRIPT_COMMENT_LINE -> /* This is a comment */
 #define NIKISCRIPT_COMMENT_LINES '*'
+#endif
+
+#ifndef NIKISCRIPT_ARGUMENTS_QUOTE
+#define NIKISCRIPT_ARGUMENTS_QUOTE '"'
 #endif
 
 namespace ns {

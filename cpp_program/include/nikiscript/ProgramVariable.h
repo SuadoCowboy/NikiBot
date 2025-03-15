@@ -49,6 +49,8 @@ namespace ns {
 		} catch (...) {}
 	}
 
+	void setUnsignedLongLong(Context&, ProgramVariable* pVar, const std::string& str);
+
 	void setFloat(Context&, ProgramVariable* pVar, const std::string& str);
 	void setDouble(Context&, ProgramVariable* pVar, const std::string& str);
 	void setLongDouble(Context&, ProgramVariable* pVar, const std::string& str);
@@ -57,7 +59,5 @@ namespace ns {
 	void setShort(Context&, ProgramVariable* pVar, const std::string& str);
 	void setInteger(Context&, ProgramVariable* pVar, const std::string& str);
 	void setLong(Context&, ProgramVariable* pVar, const std::string& str);
-
 	void setLongLong(Context&, ProgramVariable* pVar, const std::string& str);
-	void setUnsignedLongLong(Context&, ProgramVariable* pVar, const std::string& str);
 }

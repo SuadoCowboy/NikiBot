@@ -78,4 +78,12 @@ namespace ns {
 	 * @note https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring
 	 */
 	void trim(std::string& s);
+
+	/**
+	 * @brief call isspace but does not accept newline
+	 * @param c char to check if is space
+	 * @return true if is space
+	 * @return false if is not space
+	 */
+	bool isSpaceNotNewline(char c);
 }

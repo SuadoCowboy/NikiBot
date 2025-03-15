@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <string>
-#include <unordered_map>
+#include <vector>
 
 namespace ns {
 	enum TokenType : uint8_t {
@@ -15,7 +15,7 @@ namespace ns {
 	struct Token {
 		TokenType type = TokenType::NONE;
 		std::string value;
-		std::unordered_map<uint64_t, std::string> references; ///< References identified in Token::value. **pair.first** = index where should insert the reference but _does not count with previous inserted references_
+		std::vector<std::pair<uint64_t, std::string>> references{}; ///< References identified in Token::value. **pair.first** = index where should insert the reference but _does not count with previous inserted references_
 
 		Token();
 		Token(TokenType type);

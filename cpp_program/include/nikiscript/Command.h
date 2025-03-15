@@ -19,7 +19,7 @@ namespace ns {
 		 * @note odd = name
 		 * @note even = description
 		 */
-		std::vector<std::string_view> argsDescriptions;
+		std::vector<std::string_view> argsDescriptions{};
 
 		Command();
 		/**
