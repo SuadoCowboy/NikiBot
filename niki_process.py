@@ -109,10 +109,10 @@ async def runNikiScript(interaction: discord.Interaction, script: str):
 	try:
 		message, discordCommands = handleNikiCMDProcess(script, 1 if isUserIdInOwners else 0)
 	except subprocess.TimeoutExpired:
-		await interaction.edit_original_response("Execution timed out!")
+		await interaction.edit_original_response(content="Execution timed out!")
 		return
 	except Exception as e:
-		await interaction.edit_original_response(f"Error: {e}")
+		await interaction.edit_original_response(content=f"Error: {e}")
 		return
 
 	if len(message) > 1017: # counting ````` => -6
