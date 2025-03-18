@@ -45,7 +45,7 @@ void registerCommands(ns::Context& ctx) {
 }
 
 void exec_command(ns::Context& ctx) {
-	std::string& path = ctx.arguments.getString();
+	std::string& path = ctx.args.getString(0);
 
 	if (!isValidFileName(path))
 		return;
@@ -58,7 +58,7 @@ void save_command(ns::Context& ctx) {
 	if (!std::filesystem::is_directory("./scripts"))
 		std::filesystem::create_directory("./scripts");
 
-	std::string& path = ctx.arguments.getString();
+	std::string& path = ctx.args.getString(0);
 	if (!isValidFileName(path))
 		return;
 
@@ -123,7 +123,7 @@ void ex_command(ns::Context& ctx) {
 	}
 
 	std::stringstream out;
-	if (ctx.arguments.arguments.size() == 0) {
+	if (ctx.args.arguments.size() == 0) {
 		for (const auto& entry : std::filesystem::directory_iterator("./examples"))
 			out << entry.path().filename() << '\n';
 
@@ -131,7 +131,7 @@ void ex_command(ns::Context& ctx) {
 		return;
 	}
 
-	std::string& path = ctx.arguments.getString();
+	std::string& path = ctx.args.getString(0);
 	if (!isValidFileName(path))
 		return;
 
@@ -157,12 +157,12 @@ void ex_command(ns::Context& ctx) {
 
 
 void dc_command(ns::Context& ctx) {
-	discord += ctx.arguments.getString() + '\n';
+	discord += ctx.args.getString(0) + '\n';
 }
 
 void rcon_command(ns::Context& ctx) {
 	if (!isUserOwner())
 		return;
 
-	system(ctx.arguments.getString().c_str());
+	system(ctx.args.getString(0).c_str());
 }

@@ -29,25 +29,24 @@ namespace ns {
 
 	struct Arguments {
 		std::vector<std::string> arguments{};
-		uint8_t offset = 0;
 
-		std::string& getString();
+		std::string& getString(size_t index);
 
-		float getFloat();
-		double getDouble();
-		long double getLongDouble();
+		float getFloat(size_t index);
+		double getDouble(size_t index);
+		long double getLongDouble(size_t index);
 
-		long getLong();
-		long long getLongLong();
-		unsigned long long getUnsignedLongLong();
+		long getLong(size_t index);
+		long long getLongLong(size_t index);
+		unsigned long long getUnsignedLongLong(size_t index);
 
 		/**
 		 * @brief uses std::stoul so any number below that can be used
 		 * @tparam T number type
 		 */
 		template<typename T>
-		T getUnsigned() {
-			return std::stoul(arguments[offset++]);
+		T getUnsigned(size_t index) {
+			return std::stoul(arguments[index]);
 		}
 
 		/**
@@ -55,14 +54,9 @@ namespace ns {
 		 * @tparam T
 		 */
 		template<typename T>
-		T getSigned() {
-			return T(std::stoi(arguments[offset++]));
+		T getSigned(size_t index) {
+			return T(std::stoi(arguments[index]));
 		}
-
-		/**
-		 * @brief clears arguments vector and sets offset to 0
-		 */
-		void clear();
 
 #ifdef NIKISCRIPT_ARGUMENTS_EXTRA
 		NIKISCRIPT_ARGUMENTS_EXTRA
@@ -79,7 +73,7 @@ namespace ns {
 
 		Command* pCommand = nullptr;
 
-		Arguments arguments;
+		Arguments args;
 
 		ConsoleVariables consoleVariables;
 		ProgramVariables programVariables;
@@ -91,7 +85,7 @@ namespace ns {
 		ToggleCommandsRunning toggleCommandsRunning;
 
 		std::string filePath; ///< when running script from a file
-		size_t lineIndex = 0, lineCount = 0;
+		size_t lineCount = 0;
 
 		uint8_t origin = 0; ///< this is used so that the command knows where he's running in. See ns::OriginType
 	};

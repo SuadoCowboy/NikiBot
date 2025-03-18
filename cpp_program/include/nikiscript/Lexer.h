@@ -50,12 +50,11 @@
 #endif
 
 namespace ns {
-	struct Context;
-
 	struct Lexer {
 		std::string input;
 		uint64_t position = 0;
 		size_t openArguments = 0; ///< how many times NIKISCRIPT_ARGUMENTS_OPEN was found
+		size_t lineIndex = 0; ///< how many newlines were found basically
 
 		/**
 		 * @brief This variable is where advance stores the token
@@ -73,14 +72,14 @@ namespace ns {
 		 * @see Lexer::setTokenValue
 		 * @see Lexer::setTokenType
 		 */
-		void advance(Context& ctx);
+		void advance();
 
 		/**
 		 * @brief Advances tokens until it reaches one of the flags
 		 * @param flags Bitwise TokenType
 		 * @see Lexer::advance
 		 */
-		void advanceUntil(Context& ctx, uint8_t flags);
+		void advanceUntil(uint8_t flags);
 
 		/**
 		 * @brief Gets token value by checking where a whitespace is found
@@ -88,7 +87,7 @@ namespace ns {
 		 * @return Next input's initial position. Either whitespace, EOS or END
 		 * @see Lexer::setTokenType
 		 */
-		uint64_t setTokenValue(Context& ctx);
+		uint64_t setTokenValue();
 
 		/**
 		 * @brief Identifies token type by checking the previous token type
