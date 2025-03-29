@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "DLLExport.h"
+
 namespace ns {
 	enum TokenType : uint8_t {
 		NONE = 0,
@@ -12,7 +14,7 @@ namespace ns {
 		END = 8 ///< End of input data
 	};
 
-	struct Token {
+	struct NIKIAPI Token {
 		TokenType type = TokenType::NONE;
 		std::string value;
 		std::vector<std::pair<uint64_t, std::string>> references{}; ///< References identified in Token::value. **pair.first** = index where should insert the reference but _does not count with previous inserted references_
@@ -27,11 +29,11 @@ namespace ns {
 	/**
 	 * @brief inserts all references in the value
 	 */
-	void insertReferencesInToken(Context& ctx, Token& token);
+	NIKIAPI void insertReferencesInToken(Context& ctx, Token& token);
 }
 
-uint8_t operator|(ns::TokenType l, ns::TokenType r);
-uint8_t operator|(uint8_t l, ns::TokenType r);
-uint8_t operator|(ns::TokenType l, uint8_t r);
-uint8_t operator&(uint8_t l, ns::TokenType r);
-uint8_t operator&(ns::TokenType l, uint8_t r);
+NIKIAPI uint8_t operator|(ns::TokenType l, ns::TokenType r);
+NIKIAPI uint8_t operator|(uint8_t l, ns::TokenType r);
+NIKIAPI uint8_t operator|(ns::TokenType l, uint8_t r);
+NIKIAPI uint8_t operator&(uint8_t l, ns::TokenType r);
+NIKIAPI uint8_t operator&(ns::TokenType l, uint8_t r);

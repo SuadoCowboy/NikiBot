@@ -4,12 +4,14 @@
 #include <string_view>
 #include <string>
 
+#include "DLLExport.h"
+
 namespace ns {
 	struct Context;
 
 	typedef void(*CommandCallback)(Context& ctx);
 
-	struct Command {
+	struct NIKIAPI Command {
 		std::string_view name;
 		unsigned char minArgs = 0, maxArgs = 0;
 		CommandCallback callback = nullptr;

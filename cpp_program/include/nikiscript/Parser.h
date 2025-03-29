@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DLLExport.h"
 #include "Context.h"
 
 #ifndef NIKISCRIPT_LOOP_VARIABLE
@@ -19,7 +20,7 @@ namespace ns {
 	 * @brief Clear anything related to the current lexer statement
 	 * @note It does not go to the next EOS
 	 */
-	void clearStatementData(Context& ctx);
+	NIKIAPI void clearStatementData(Context& ctx);
 
 	/**
 	 * @brief if variable is a toggle variable and its allowed to run or if it's a common variable.
@@ -30,7 +31,7 @@ namespace ns {
 	 * @see ns::parse
 	 * @see ns::handleIdentifierToken
 	 */
-	bool canRunVariable(Context& ctx);
+	NIKIAPI bool canRunVariable(Context& ctx);
 
 	/**
 	 * @brief Called in parse function when EOS or END is reached
@@ -40,7 +41,7 @@ namespace ns {
 	 * @param pProgramVar if not null: sets/gets program variable
 	 * @see ns::parse
 	 */
-	void handleCommandCall(Context& ctx, ProgramVariable*& pProgramVar);
+	NIKIAPI void handleCommandCall(Context& ctx, ProgramVariable*& pProgramVar);
 
 	/**
 	 * @brief Called in parse function when IDENTIFIER token is passed
@@ -51,37 +52,35 @@ namespace ns {
 	 * @see ns::parse
 	 * @see ns::canRunVariable
 	 */
-	uint8_t handleIdentifierToken(Context& ctx, ProgramVariable*& pProgramVar, bool printError);
+	NIKIAPI uint8_t handleIdentifierToken(Context& ctx, ProgramVariable*& pProgramVar, bool printError);
 
 	/**
 	 * @brief Handles references in the string and checks if the parameter matches the argument type
 	 * @note Possible argument types: s = string, i = integer, d = decimal, v = variable
 	 * @see ns::parse
 	 */
-	void handleArgumentToken(Context& ctx, bool printError);
-	
-	extern uint64_t maxConsoleVariableCalls; ///< 0 = unlimited
+	NIKIAPI void handleArgumentToken(Context& ctx, bool printError);
 
 	/**
 	 * @brief Called in parse function when an ConsoleVariable is passed as a IDENTIFIER
 	 * @note I find this algorithm very interesting and fun(it creates a bunch of lexers for each variable call instead of recursive calling)
-	 * @see ns::maxConsoleVariableCalls
+	 * @see ns::Context::maxConsoleVariablesRecursiveDepth
 	 * @param ctx
 	 * @param pProgramVar
 	 */
-	void handleConsoleVariableCall(Context& ctx, ProgramVariable*& pProgramVar, bool printError);
+	NIKIAPI void handleConsoleVariableCall(Context& ctx, ProgramVariable*& pProgramVar, bool printError);
 
 	/**
 	 * @brief if a loop variable is active, its script is ran here
 	 * @param ctx
 	 */
-	void updateLoopVariables(Context& ctx);
+	NIKIAPI void updateLoopVariables(Context& ctx);
 
 	/**
 	 * @brief Parses and interpret scripts: handles commands and variables as well as their arguments
 	 * @param ctx
 	 */
-	void parse(Context& ctx, bool printError=true);
+	NIKIAPI void parse(Context& ctx, bool printError=true);
 
-	bool parseFile(Context& ctx, const char* filePath, bool printError);
+	NIKIAPI bool parseFile(Context& ctx, const char* filePath, bool printError);
 }

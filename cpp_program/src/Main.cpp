@@ -33,11 +33,11 @@ void nikiscriptPrintCallback(void*, ns::PrintLevel level, const std::string& mes
 
 int main() {
 	ns::setPrintCallback(nullptr, nikiscriptPrintCallback);
-	ns::maxConsoleVariableCalls = 10;
-
+	
 	ns::Context ctx;
+	ctx.maxConsoleVariablesRecursiveDepth = 10;
 	::registerCommands(ctx);
-	ns::registerVariable(ctx, "cvars_calls_max", "how many variables can be called inside each other", &ns::maxConsoleVariableCalls, ns::getNumber<uint64_t>, ns::setUnsigned<uint64_t>);
+	ns::registerVariable(ctx, "cvars_calls_max", "how many variables can be called inside each other", &ctx.maxConsoleVariablesRecursiveDepth, ns::getNumber<uint64_t>, ns::setUnsigned<uint64_t>);
 
 	ns::Lexer lexer;
 	ctx.pLexer = &lexer;
