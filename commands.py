@@ -13,6 +13,7 @@ async def help_command(interaction: discord.Interaction, _args: list[str], isOwn
 	if not interaction.app_permissions.send_messages and not isOwner:
 		return
 
+	out = ''
 	for command in commands:
 		out += command+'\n'
 
