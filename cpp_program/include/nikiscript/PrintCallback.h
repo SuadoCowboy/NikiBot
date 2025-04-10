@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <string>
 
-#include "DLLExport.h"
 #include "Utils.h"
 
 namespace ns {
@@ -14,22 +13,19 @@ namespace ns {
 		ERROR, ///< anything that went wrong and can not continue
 	};
 
-	NIKIAPI std::string printLevelToString(PrintLevel level);
+	const char* levelToString(PrintLevel level);
 
-	typedef void(*PrintCallback)(void* pData, PrintLevel level, const std::string& message);
+	typedef void(*PrintCallback)(void* pData, PrintLevel level, const char* message);
 
 	extern PrintCallback printCallback;
 	extern void* pPrintCallbackData;
 
 	template<typename... Args>
-	void printf(const PrintLevel& level, const std::string& format, Args ... args) {
-		print(level, formatString(format, args...));
+	void printf(PrintLevel level, const char* format, Args ... args) {
+		print(level, formatString(format, args...).c_str());
 	}
 
-	extern PrintCallback printCallback;
-	extern void* pPrintCallbackData;
-
-	NIKIAPI void setPrintCallback(void* pData, PrintCallback callback);
-	NIKIAPI void print(const PrintLevel& level, const std::string& str);
-	NIKIAPI void printUnknownCommand(const std::string& command);
+	void setPrintCallback(void* pData, PrintCallback callback);
+	void print(PrintLevel level, const char* str);
+	void printUnknownCommand(const char* command);
 }

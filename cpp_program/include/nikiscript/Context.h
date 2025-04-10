@@ -5,7 +5,6 @@
 #include <string>
 #include <unordered_map>
 
-#include "DLLExport.h"
 #include "Command.h"
 #include "CommandHandler.h"
 #include "PrintCallback.h"
@@ -28,7 +27,7 @@ namespace ns {
 
 	struct Context;
 
-	struct NIKIAPI Arguments {
+	struct Arguments {
 		std::vector<std::string> arguments{};
 
 		std::string& getString(size_t index);
@@ -69,7 +68,7 @@ namespace ns {
 	typedef std::vector<ConsoleVariables::pointer> ToggleVariablesRunning; ///< This is unecessary to be a pointer but I like the idea of using only 8 bytes instead of the same bytes as the var name
 	typedef std::vector<Command*> ToggleCommandsRunning;
 
-	struct NIKIAPI Context {
+	struct Context {
 		Lexer* pLexer = nullptr;
 
 		Command* pCommand = nullptr;
@@ -101,14 +100,14 @@ namespace ns {
 	 * It updates all those pointers.
 	 * @param source object to copy content from
 	 */
-	NIKIAPI Context copyContext(const Context& source);
+	Context copyContext(const Context& source);
 }
 
-NIKIAPI uint8_t operator|(ns::OriginType l, ns::OriginType r);
-NIKIAPI uint8_t operator|(uint8_t l, ns::OriginType r);
-NIKIAPI uint8_t operator|(ns::OriginType l, uint8_t r);
-NIKIAPI uint8_t& operator|=(uint8_t& l, ns::OriginType r);
-NIKIAPI uint8_t operator&(uint8_t l, ns::OriginType r);
-NIKIAPI uint8_t operator&(ns::OriginType l, uint8_t r);
-NIKIAPI uint8_t& operator&=(uint8_t& l, ns::OriginType r);
-NIKIAPI uint8_t operator~(ns::OriginType l);
+uint8_t operator|(ns::OriginType l, ns::OriginType r);
+uint8_t operator|(uint8_t l, ns::OriginType r);
+uint8_t operator|(ns::OriginType l, uint8_t r);
+uint8_t& operator|=(uint8_t& l, ns::OriginType r);
+uint8_t operator&(uint8_t l, ns::OriginType r);
+uint8_t operator&(ns::OriginType l, uint8_t r);
+uint8_t& operator&=(uint8_t& l, ns::OriginType r);
+uint8_t operator~(ns::OriginType l);

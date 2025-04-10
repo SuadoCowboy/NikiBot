@@ -1,27 +1,25 @@
 #pragma once
 
 #include <vector>
-#include <string_view>
 #include <string>
-
-#include "DLLExport.h"
+#include <stdint.h>
 
 namespace ns {
 	struct Context;
 
 	typedef void(*CommandCallback)(Context& ctx);
 
-	struct NIKIAPI Command {
-		std::string_view name;
-		unsigned char minArgs = 0, maxArgs = 0;
+	struct Command {
+		std::string name;
+		uint8_t minArgs = 0, maxArgs = 0;
 		CommandCallback callback = nullptr;
-		std::string_view description;
+		std::string description;
 
 		/**
 		 * @note odd = name
 		 * @note even = description
 		 */
-		std::vector<std::string_view> argsDescriptions{};
+		std::vector<std::string> argsDescriptions{};
 
 		Command();
 		/**
@@ -33,7 +31,7 @@ namespace ns {
 		 * @param argsDescriptions Arguments description. Should have 2 strings for each argument, where the first one is argument name and the second is argument description.
 		 * @see ns::registerCommands for code example
 		 */
-		Command(const std::string_view& name, unsigned char minArgs, unsigned char maxArgs, CommandCallback callback, const std::string_view& description, const std::vector<std::string_view>& argsDescriptions);
+		Command(const std::string& name, uint8_t minArgs, uint8_t maxArgs, CommandCallback callback, const std::string& description, const std::vector<std::string>& argsDescriptions);
 	
 		std::string getArgumentsNames();
 

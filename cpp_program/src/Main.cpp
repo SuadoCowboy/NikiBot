@@ -9,7 +9,7 @@
 
 #include <Commands.h>
 
-void nikiscriptPrintCallback(void*, ns::PrintLevel level, const std::string& message) {
+void nikiscriptPrintCallback(void*, ns::PrintLevel level, const char* message) {
 	switch (level) {
 	case ns::PrintLevel::ECHO:
 		std::cout << "ECHO:\n";

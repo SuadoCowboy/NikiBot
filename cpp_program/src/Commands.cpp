@@ -32,7 +32,7 @@ static bool isValidFileName(const std::string& name) {
 
 void registerCommands(ns::Context& ctx) {
 	ns::registerCommands(ctx);
-	ctx.commands.remove("exec", ctx);
+	ctx.commands.remove(ctx, "remove");
 	ctx.commands.add(ns::Command("exec", 1,1, exec_command, "parses a script file", {"s[fileName]", "file to parse"}));
 	ctx.commands.add(ns::Command("save", 1,1, save_command, "saves console variables in a file", {"s[fileName]", "file to store data"}));
 	ctx.commands.add(ns::Command("vars", 0,0, vars_command, "prints out current stored console variables and their values", {}));
@@ -88,7 +88,7 @@ void vars_command(ns::Context& ctx) {
 	for (auto& var : ctx.consoleVariables)
 		vars << var.first << " = " << var.second << '\n';
 
-	ns::printf(ns::PrintLevel::ECHO, vars.str());
+	ns::printf(ns::PrintLevel::ECHO, vars.str().c_str());
 }
 
 void pvars_command(ns::Context& ctx) {
@@ -96,7 +96,7 @@ void pvars_command(ns::Context& ctx) {
 	for (auto& var : ctx.programVariables)
 		vars << var.first << " = " << var.second.get(ctx, &var.second) << '\n';
 
-	ns::printf(ns::PrintLevel::ECHO, vars.str());
+	ns::printf(ns::PrintLevel::ECHO, vars.str().c_str());
 }
 
 void scripts_command(ns::Context& ctx) {
@@ -113,7 +113,7 @@ void scripts_command(ns::Context& ctx) {
         out << entry.path() << '\n';
 	}
 
-	ns::print(ns::PrintLevel::ECHO, out.str());
+	ns::print(ns::PrintLevel::ECHO, out.str().c_str());
 }
 
 void ex_command(ns::Context& ctx) {
@@ -127,7 +127,7 @@ void ex_command(ns::Context& ctx) {
 		for (const auto& entry : std::filesystem::directory_iterator("./examples"))
 			out << entry.path().filename() << '\n';
 
-		ns::print(ns::PrintLevel::ECHO, out.str());
+		ns::print(ns::PrintLevel::ECHO, out.str().c_str());
 		return;
 	}
 
@@ -151,7 +151,7 @@ void ex_command(ns::Context& ctx) {
 	}
 	out << '\n';
 
-	ns::printf(ns::PrintLevel::ECHO, out.str());
+	ns::printf(ns::PrintLevel::ECHO, out.str().c_str());
 	ns::parseFile(ctx, path.c_str(), true);
 }
 

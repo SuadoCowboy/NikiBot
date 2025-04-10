@@ -1,18 +1,17 @@
 #pragma once
 
 #include <unordered_map>
-#include <string_view>
+#include <string>
 
-#include "DLLExport.h"
 #include "Command.h"
 
 namespace ns {
 	struct Context;
 
-	struct NIKIAPI CommandHandler {
-		std::unordered_map<std::string_view, Command> commands;
+	struct CommandHandler {
+		std::unordered_map<std::string, Command> commands{};
 
-		Command* get(const std::string_view& name);
+		Command* get(const std::string& name);
 		/**
 		 * @brief adds command to commands unordered_map
 		 * 
@@ -22,6 +21,6 @@ namespace ns {
 		 */
 		bool add(const Command& command);
 
-		void remove(const std::string_view& name, Context& ctx);
+		void remove(Context& pCtx, const std::string& name);
 	};
 }

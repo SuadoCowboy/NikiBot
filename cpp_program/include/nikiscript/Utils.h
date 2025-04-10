@@ -4,8 +4,6 @@
 #include <string>
 #include <sstream>
 
-#include "DLLExport.h"
-
 namespace ns {
 	/**
 	 * @warning this function is not meant to be used outside this header
@@ -61,7 +59,7 @@ namespace ns {
 	  * @see ns::rtrim
 	  * @note https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring
 	  */
-	NIKIAPI void ltrim(std::string &s);
+	void ltrim(std::string &s);
 	
 	/**
 	 * @brief trim from end
@@ -70,7 +68,7 @@ namespace ns {
 	 * @see ns::ltrim
 	 * @note https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring
 	 */
-	NIKIAPI void rtrim(std::string &s);
+	void rtrim(std::string &s);
 	
 	/**
 	 * @brief trim from start and end
@@ -79,7 +77,7 @@ namespace ns {
 	 * @see ns::rtrim
 	 * @note https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring
 	 */
-	NIKIAPI void trim(std::string& s);
+	void trim(std::string& s);
 
 	/**
 	 * @brief call isspace but does not accept newline
@@ -87,5 +85,5 @@ namespace ns {
 	 * @return true if is space
 	 * @return false if is not space
 	 */
-	NIKIAPI bool isSpaceNotNewline(char c);
+	bool isSpaceNotNewline(char c);
 }

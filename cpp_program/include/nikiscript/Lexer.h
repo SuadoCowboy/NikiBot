@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <string>
 
-#include "DLLExport.h"
 #include "Token.h"
 
 #ifndef NIKISCRIPT_ESCAPE_NEXT_CHAR
@@ -51,7 +50,7 @@
 #endif
 
 namespace ns {
-	struct NIKIAPI Lexer {
+	struct Lexer {
 		std::string input;
 		uint64_t position = 0;
 		size_t openArguments = 0; ///< how many times NIKISCRIPT_ARGUMENTS_OPEN was found
