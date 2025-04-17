@@ -27,7 +27,7 @@ namespace ns {
 	 */
 	template<typename T, typename ... Args>
 	static void _formatStringValue(const std::string& format, std::stringstream& buf, T value, Args& ... args) {
-		uint64_t idx = format.find("{}");
+		size_t idx = format.find("{}");
 		if (idx == std::string::npos) {
 			buf << format;
 			return;

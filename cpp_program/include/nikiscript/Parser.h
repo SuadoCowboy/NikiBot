@@ -14,6 +14,14 @@
 #define NIKISCRIPT_TOGGLE_OFF '-'
 #endif
 
+#ifndef NIKISCRIPT_FILE_EXTENSION
+#define NIKISCRIPT_FILE_EXTENSION ".cfg"
+#endif
+
+#ifndef NIKISCRIPT_ROOT_DIRECTORY
+#define NIKISCRIPT_ROOT_DIRECTORY "cfg"
+#endif
+
 namespace ns {
 	/**
 	 * @brief Clear anything related to the current lexer statement

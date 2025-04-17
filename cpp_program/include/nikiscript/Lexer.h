@@ -52,7 +52,7 @@
 namespace ns {
 	struct Lexer {
 		std::string input;
-		uint64_t position = 0;
+		size_t position = 0;
 		size_t openArguments = 0; ///< how many times NIKISCRIPT_ARGUMENTS_OPEN was found
 		size_t lineIndex = 0; ///< how many newlines were found basically
 
@@ -87,7 +87,7 @@ namespace ns {
 		 * @return Next input's initial position. Either whitespace, EOS or END
 		 * @see Lexer::setTokenType
 		 */
-		uint64_t setTokenValue();
+		size_t setTokenValue();
 
 		/**
 		 * @brief Identifies token type by checking the previous token type
