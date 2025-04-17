@@ -37,7 +37,7 @@ void registerCommands(ns::Context& ctx) {
 	ctx.commands.add(ns::Command("save", 1,1, save_command, "saves console variables in a file", {"s[fileName]", "file to store data"}));
 	ctx.commands.add(ns::Command("vars", 0,0, vars_command, "prints out current stored console variables and their values", {}));
 	ctx.commands.add(ns::Command("pvars", 0,0, pvars_command, "prints out current stored program variables and their values", {}));
-	ctx.commands.add(ns::Command("scripts", 0,0, scripts_command, "prints out scripts folder content", {}));
+	ctx.commands.add(ns::Command("cfgs", 0,0, cfgs_command, "prints out cfgs folder content", {}));
 	ctx.commands.add(ns::Command("ex", 0,1, ex_command, "shows examples or run the chosen example", {"s[path?]", "path to example"}));
 
 	ctx.commands.add(ns::Command("dc", 1,1, dc_command, "passes a string for the bot to run", {"s[text]", "text to pass as a command"}));
@@ -50,22 +50,19 @@ void exec_command(ns::Context& ctx) {
 	if (!isValidFileName(path))
 		return;
 
-	path = "./scripts/"+path;
+	path = "./cfgs/"+path;
 	ns::parseFile(ctx, path.c_str(), true);
 }
 
 void save_command(ns::Context& ctx) {
-	if (!std::filesystem::exists("./scripts")) {
-		if (!std::filesystem::is_directory("./scripts"))
-			std::filesystem::rename("./scripts", "./scripts.wtf"); // ? Why am I even doing this lol
-		std::filesystem::create_directory("./scripts");
-	}
+	if (!std::filesystem::exists("./cfgs"))
+		std::filesystem::create_directory("./cfgs");
 
 	std::string& path = ctx.args.getString(0);
 	if (!isValidFileName(path))
 		return;
 
-	path = "./scripts/"+path;
+	path = "./cfgs/"+path;
 	if (!std::filesystem::path(path).has_extension())
 		path += NIKISCRIPT_FILE_EXTENSION;
 
@@ -104,14 +101,14 @@ void pvars_command(ns::Context& ctx) {
 	ns::printf(ns::PrintLevel::ECHO, vars.str().c_str());
 }
 
-void scripts_command(ns::Context& ctx) {
-	if (!std::filesystem::is_directory("./scripts")) {
-		ns::print(ns::PrintLevel::ECHO, "Scripts folder is empty\n");
+void cfgs_command(ns::Context& ctx) {
+	if (!std::filesystem::is_directory("./cfgs")) {
+		ns::print(ns::PrintLevel::ECHO, "cfgs folder is empty\n");
 		return;
 	}
 
 	std::stringstream out;
-	for (const auto& entry : std::filesystem::directory_iterator("./scripts")) {
+	for (const auto& entry : std::filesystem::directory_iterator("./cfgs")) {
 		if (entry.is_directory())
 			continue;
 
