@@ -67,7 +67,7 @@ void save_command(ns::Context& ctx) {
 
 	path = "./scripts/"+path;
 	if (!std::filesystem::path(path).has_extension())
-		path += ".cfg";
+		path += NIKISCRIPT_FILE_EXTENSION;
 
 	ns::Context tempCtx = ns::copyContext(ctx);
 	ns::parseFile(tempCtx, path.c_str(), false);
