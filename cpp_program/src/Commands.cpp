@@ -55,14 +55,19 @@ void exec_command(ns::Context& ctx) {
 }
 
 void save_command(ns::Context& ctx) {
-	if (!std::filesystem::is_directory("./scripts"))
+	if (!std::filesystem::exists("./scripts")) {
+		if (!std::filesystem::is_directory("./scripts"))
+			std::filesystem::rename("./scripts", "./scripts.wtf"); // ? Why am I even doing this lol
 		std::filesystem::create_directory("./scripts");
+	}
 
 	std::string& path = ctx.args.getString(0);
 	if (!isValidFileName(path))
 		return;
 
 	path = "./scripts/"+path;
+	if (!std::filesystem::path(path).has_extension())
+		path += ".cfg";
 
 	ns::Context tempCtx = ns::copyContext(ctx);
 	ns::parseFile(tempCtx, path.c_str(), false);
