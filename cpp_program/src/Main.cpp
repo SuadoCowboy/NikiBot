@@ -4,9 +4,9 @@
 #include <filesystem>
 
 #define NIKISCRIPT_IMPLEMENTATION
-#include <NikiScript/PrintCallback.h>
-#include <NikiScript/Parser.h>
-#include <NikiScript/NikiScript.h>
+#include <nikiscript/PrintCallback.h>
+#include <nikiscript/Parser.h>
+#include <nikiscript/NikiScript.h>
 
 #include <Commands.h>
 
