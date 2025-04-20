@@ -18,8 +18,10 @@
 #define NIKISCRIPT_FILE_EXTENSION ".cfg"
 #endif
 
-#ifndef NIKISCRIPT_ROOT_DIRECTORY
-#define NIKISCRIPT_ROOT_DIRECTORY "cfg"
+#define PATH_SEPARATOR "/"
+
+#ifndef NIKISCRIPT_CFG_ROOT_DIRECTORY
+#define NIKISCRIPT_CFG_ROOT_DIRECTORY "cfg" PATH_SEPARATOR
 #endif
 
 namespace ns {
@@ -88,6 +90,25 @@ namespace ns {
 	 * @param ctx
 	 */
 	void parse(Context& ctx, bool printError=true);
-
 	bool parseFile(Context& ctx, const char* filePath, bool printError);
+
+	/**
+	 * @brief should be used when the main context is already using the lexer
+	 * @param ctx
+	 * @param input
+	 * @note the newlines from the end are removed
+	 * @see ns::printAppendToString
+	 * @return the print output which is not printed by the commands
+	 * @warning print function is set to ns::printAppendToString
+	 */
+	std::string parseInsideAnotherScript(Context& ctx, const char* input); // TODO: when making NikiScript thread-safe, don't forget this function!
+
+	std::string getCfgRootDirectory();
 }
+
+#ifdef NIKISCRIPT_IMPLEMENTATION
+#undef NIKISCRIPT_IMPLEMENTATION
+std::string ns::getCfgRootDirectory() {
+	return std::string(NIKISCRIPT_CFG_ROOT_DIRECTORY);
+}
+#endif

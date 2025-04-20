@@ -28,4 +28,12 @@ namespace ns {
 	void setPrintCallback(void* pData, PrintCallback callback);
 	void print(PrintLevel level, const char* str);
 	void printUnknownCommand(const char* command);
+
+	/**
+	 * @brief appends string to pBuffer
+	 * @param pBuffer should be std::string*
+	 * @param level unused
+	 * @param string string to append to pBuffer
+	 */
+	void printAppendToString(void* pBuffer, PrintLevel level, const char* string);
 }

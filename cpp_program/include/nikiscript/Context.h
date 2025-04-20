@@ -23,6 +23,7 @@ namespace ns {
 		VARIABLE_TOGGLE = 16, ///< '+' or '-'
 		FILE = 32, ///< ns::parseFile or exec command
 		INTERNAL = 64, ///< raw script generated from C++ code and not from a file or variable or anything else
+		REFERENCE = 128, ///< scripts ran inside a reference ${echo hello} -> echo command is ran inside a reference and its output is the reference result
 	};
 
 	struct Context;
@@ -73,34 +74,34 @@ namespace ns {
 
 		Command* pCommand = nullptr;
 
-		Arguments args;
+		Arguments args{};
 
-		ConsoleVariables consoleVariables;
-		ProgramVariables programVariables;
+		ConsoleVariables consoleVariables{};
+		ProgramVariables programVariables{};
 
-		CommandHandler commands;
+		CommandHandler commands{};
 
-		LoopVariablesRunning loopVariablesRunning;
-		ToggleVariablesRunning toggleVariablesRunning;
-		ToggleCommandsRunning toggleCommandsRunning;
+		LoopVariablesRunning loopVariablesRunning{};
+		ToggleVariablesRunning toggleVariablesRunning{};
+		ToggleCommandsRunning toggleCommandsRunning{};
 
-		std::string filePath; ///< when running script from a file
+		std::string filePath{}; ///< when running script from a file
 		size_t lineCount = 0;
 
 		uint8_t origin = 0; ///< this is used so that the command knows where he's running in. See ns::OriginType
 
-		uint16_t maxConsoleVariablesRecursiveDepth = 0; ///< How many console variables can be called inside each other 
+		uint16_t maxConsoleVariablesRecursiveDepth = 255; ///< How many console variables can be called inside each other
 	};
 
 	/**
-	 * @brief Do not copy Context without calling this function.
+	 * @brief If you want a 100% new copy without being dependent on the source context then use this function
 	 * LoopVariablesRunning and ToggleVariablesRunning stores pointers
 	 * pointed to ConsoleVariables as well as toggleCommandsRunning whose
 	 * pointers are from CommandHandler. That's why this function exists:
 	 * It updates all those pointers.
 	 * @param source object to copy content from
 	 */
-	Context copyContext(const Context& source);
+	Context deepCopyContext(const Context& source);
 }
 
 uint8_t operator|(ns::OriginType l, ns::OriginType r);

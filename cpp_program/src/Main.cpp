@@ -3,9 +3,11 @@
 #include <fstream>
 #include <filesystem>
 
-#include <nikiscript/PrintCallback.h>
-#include <nikiscript/Parser.h>
-#include <nikiscript/NikiScript.h>
+#define NIKISCRIPT_IMPLEMENTATION
+
+#include <NikiScript/PrintCallback.h>
+#include <NikiScript/Parser.h>
+#include <NikiScript/NikiScript.h>
 
 #include <Commands.h>
 

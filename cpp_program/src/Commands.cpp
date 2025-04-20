@@ -66,7 +66,7 @@ void save_command(ns::Context& ctx) {
 	if (!std::filesystem::path(path).has_extension())
 		path += NIKISCRIPT_FILE_EXTENSION;
 
-	ns::Context tempCtx = ns::copyContext(ctx);
+	ns::Context tempCtx = ns::deepCopyContext(ctx);
 	ns::parseFile(tempCtx, path.c_str(), false);
 
 	std::ofstream file{path};
