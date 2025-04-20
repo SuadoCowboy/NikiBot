@@ -34,9 +34,10 @@ void nikiscriptPrintCallback(void*, ns::PrintLevel level, const char* message) {
 
 int main() {
 	ns::setPrintCallback(nullptr, nikiscriptPrintCallback);
-	
-	ns::Context ctx;
+
+	ns::Context ctx{};
 	ctx.maxConsoleVariablesRecursiveDepth = 10;
+
 	::registerCommands(ctx);
 	ns::registerVariable(ctx, "cvars_calls_max", "how many variables can be called inside each other", &ctx.maxConsoleVariablesRecursiveDepth, ns::getNumber<uint16_t>, ns::setUnsigned<uint16_t>);
 
