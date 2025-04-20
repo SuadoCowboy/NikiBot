@@ -38,7 +38,7 @@ int main() {
 	ns::Context ctx;
 	ctx.maxConsoleVariablesRecursiveDepth = 10;
 	::registerCommands(ctx);
-	ns::registerVariable(ctx, "cvars_calls_max", "how many variables can be called inside each other", &ctx.maxConsoleVariablesRecursiveDepth, ns::getNumber<uint64_t>, ns::setUnsigned<uint64_t>);
+	ns::registerVariable(ctx, "cvars_calls_max", "how many variables can be called inside each other", &ctx.maxConsoleVariablesRecursiveDepth, ns::getNumber<uint16_t>, ns::setUnsigned<uint16_t>);
 
 	ns::Lexer lexer;
 	ctx.pLexer = &lexer;
