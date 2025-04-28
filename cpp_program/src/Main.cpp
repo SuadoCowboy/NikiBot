@@ -12,15 +12,15 @@
 
 void nikiscriptPrintCallback(void*, ns::PrintLevel level, const char* message) {
 	switch (level) {
-	case ns::PrintLevel::ECHO:
+	case ns::ECHO:
 		std::cout << "ECHO:\n";
 		break;
 
-	case ns::PrintLevel::WARNING:
+	case ns::WARNING:
 		std::cout << "WARNING:\n";
 		break;
 
-	case ns::PrintLevel::ERROR:
+	case ns::ERROR:
 		std::cout << "ERROR:\n";
 		break;
 
