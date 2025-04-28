@@ -134,7 +134,7 @@ void ex_command(ns::Context& ctx) {
 	std::string& path = ctx.args.getString(0);
 	if (!isSafeFileName(path))
 		return;
-	path = "examples/"+path;
+	path = NIKISCRIPT_CFG_ROOT_DIRECTORY"examples/"+path;
 	
 	std::ifstream file{path};
 	if (!file) {
