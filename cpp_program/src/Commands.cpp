@@ -132,6 +132,9 @@ void ex_command(ns::Context& ctx) {
 	}
 
 	std::string& path = ctx.args.getString(0);
+	if (std::filesystem::path(path).extension().string() != "cfg")
+		path += '.cfg';
+
 	if (!isSafeFileName(path))
 		return;
 	path = NIKISCRIPT_CFG_ROOT_DIRECTORY"examples/"+path;
