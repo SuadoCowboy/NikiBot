@@ -149,7 +149,7 @@ void ex_command(ns::Context& ctx) {
 	while (file.good()) {
 		std::string line = "";
 		std::getline(file, line);
-		out << line;
+		out << line << '\n';
 	}
 	out << '\n';
 
