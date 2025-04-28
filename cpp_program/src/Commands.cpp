@@ -20,10 +20,13 @@ static bool isUserOwner() {
 	return true;
 }
 
-static bool isValidFileName(const std::string& name) {
+/**
+ * @brief whether it's trying to go back a dir with '..' or using '/' or '\\'
+ */
+static bool isSafeFileName(const std::string& name) {
 	for (size_t i = 0; i < name.size(); ++i) {
 		if (isspace(name[i]) || name[i] == '\\' || name[i] == '/' || (i+1 < name.size() && name[i] == '.' && name[i+1] == '.')) {
-			ns::printf(ns::ERROR, "Invalid name {}\n", name);
+			ns::printf(ns::ERROR, "Invalid path \"{}\"\n", name);
 			return false;
 		}
 	}
@@ -47,18 +50,18 @@ void registerCommands(ns::Context& ctx) {
 void exec_command(ns::Context& ctx) {
 	std::string& path = ctx.args.getString(0);
 
-	if (!isValidFileName(path))
+	if (!isSafeFileName(path))
 		return;
 
 	ns::parseFile(ctx, path.c_str(), true);
 }
 
 void save_command(ns::Context& ctx) {
-	if (!std::filesystem::exists("./cfgs"))
-		std::filesystem::create_directory("./cfgs");
+	if (!std::filesystem::exists("./" NIKISCRIPT_CFG_ROOT_DIRECTORY))
+		std::filesystem::create_directory("./" NIKISCRIPT_CFG_ROOT_DIRECTORY);
 
 	const std::string& path = ctx.args.getString(0);
-	if (!isValidFileName(path))
+	if (!isSafeFileName(path))
 		return;
 
 	ns::Context tempCtx = ns::deepCopyContext(ctx);
@@ -129,9 +132,10 @@ void ex_command(ns::Context& ctx) {
 	}
 
 	std::string& path = ctx.args.getString(0);
-	if (!isValidFileName(path))
+	if (!isSafeFileName(path))
 		return;
-
+	path = "examples/"+path;
+	
 	std::ifstream file{path};
 	if (!file) {
 		ns::printf(ns::ERROR, "Could not load file \"{}\"\n", path);
