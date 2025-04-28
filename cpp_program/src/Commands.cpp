@@ -137,9 +137,9 @@ void ex_command(ns::Context& ctx) {
 
 	if (!isSafeFileName(path))
 		return;
-	path = NIKISCRIPT_CFG_ROOT_DIRECTORY"examples/"+path;
+	path = "examples/"+path;
 	
-	std::ifstream file{path};
+	std::ifstream file{NIKISCRIPT_CFG_ROOT_DIRECTORY+path};
 	if (!file) {
 		ns::printf(ns::ERROR, "Could not load file \"{}\"\n", path);
 		return;
