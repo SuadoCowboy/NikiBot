@@ -7,24 +7,25 @@ startNikiCMD()
 
 class NikiBot(discord.Client):
 	async def on_ready(self):
-		await tree.sync(guild=discord.Object(GUILD_ID))
 		await tree.sync()
 		print(f'Logged on as {self.user}!')
 
 intents = discord.Intents.default()
 intents.message_content = True
 intents.dm_messages = True
+intents.voice_states = True
+intents.guilds = True
+intents.guild_messages = True
 
 client = NikiBot(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
 @tree.command(
-    name="nikiscript",
-    description="Interprets text as NikiScript",
-	guild=discord.Object(GUILD_ID)
+	name="nikiscript",
+	description="Interprets text as NikiScript",
 )
 async def script(interaction: discord.Interaction, script: str):
-	if not isOwner(interaction) and interaction.channel_id != CHANNEL_ID:
+	if not isOwner(interaction):
 		await interaction.response.send_message(f"Can not run nikiscript here. Try on <#{CHANNEL_ID}> instead.", ephemeral=True)
 		return
 
