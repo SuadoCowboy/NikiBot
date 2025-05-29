@@ -24,6 +24,7 @@ tree = discord.app_commands.CommandTree(client)
 	name="nikiscript",
 	description="Interprets text as NikiScript",
 )
+@discord.app_commands.allowed_contexts(guilds=True, dms=False, private_channels=True)
 async def script(interaction: discord.Interaction, script: str):
 	if not isOwner(interaction):
 		await interaction.response.send_message(f"Can not run nikiscript here. Try on <#{CHANNEL_ID}> instead.", ephemeral=True)
