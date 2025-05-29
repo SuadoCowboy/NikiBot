@@ -13,17 +13,20 @@ std::string discord;
 
 static bool isUserOwner() {
 	if (!isOwner) {
-		ns::print(ns::PrintLevel::ERROR, "You don't have permission to use this command");
+		ns::print(ns::ERROR, "You don't have permission to use this command");
 		return false;
 	}
 
 	return true;
 }
 
-static bool isValidFileName(const std::string& name) {
+/**
+ * @brief whether it's trying to go back a dir with '..' or using '/' or '\\'
+ */
+static bool isSafeFileName(const std::string& name) {
 	for (size_t i = 0; i < name.size(); ++i) {
 		if (isspace(name[i]) || name[i] == '\\' || name[i] == '/' || (i+1 < name.size() && name[i] == '.' && name[i+1] == '.')) {
-			ns::printf(ns::PrintLevel::ERROR, "Invalid name {}\n", name);
+			ns::printf(ns::ERROR, "Invalid path \"{}\"\n", name);
 			return false;
 		}
 	}
@@ -47,24 +50,19 @@ void registerCommands(ns::Context& ctx) {
 void exec_command(ns::Context& ctx) {
 	std::string& path = ctx.args.getString(0);
 
-	if (!isValidFileName(path))
+	if (!isSafeFileName(path))
 		return;
 
-	path = "./cfgs/"+path;
 	ns::parseFile(ctx, path.c_str(), true);
 }
 
 void save_command(ns::Context& ctx) {
-	if (!std::filesystem::exists("./cfgs"))
-		std::filesystem::create_directory("./cfgs");
+	if (!std::filesystem::exists("./" NIKISCRIPT_CFG_ROOT_DIRECTORY))
+		std::filesystem::create_directory("./" NIKISCRIPT_CFG_ROOT_DIRECTORY);
 
-	std::string& path = ctx.args.getString(0);
-	if (!isValidFileName(path))
+	const std::string& path = ctx.args.getString(0);
+	if (!isSafeFileName(path))
 		return;
-
-	path = "./cfgs/"+path;
-	if (!std::filesystem::path(path).has_extension())
-		path += NIKISCRIPT_FILE_EXTENSION;
 
 	ns::Context tempCtx = ns::deepCopyContext(ctx);
 	ns::parseFile(tempCtx, path.c_str(), false);
@@ -82,7 +80,7 @@ void save_command(ns::Context& ctx) {
 	for (auto& variable : tempCtx.consoleVariables)
 		file << "var (" << variable.first << "," << variable.second << ")\n";
 
-	ns::printf(ns::PrintLevel::ECHO, "Stored variables in \"{}\"", path);
+	ns::printf(ns::ECHO, "Stored variables in \"{}\"", path);
 }
 
 void vars_command(ns::Context& ctx) {
@@ -90,7 +88,7 @@ void vars_command(ns::Context& ctx) {
 	for (auto& var : ctx.consoleVariables)
 		vars << var.first << " = " << var.second << '\n';
 
-	ns::printf(ns::PrintLevel::ECHO, vars.str().c_str());
+	ns::printf(ns::ECHO, vars.str().c_str());
 }
 
 void pvars_command(ns::Context& ctx) {
@@ -98,12 +96,12 @@ void pvars_command(ns::Context& ctx) {
 	for (auto& var : ctx.programVariables)
 		vars << var.first << " = " << var.second.get(ctx, &var.second) << '\n';
 
-	ns::printf(ns::PrintLevel::ECHO, vars.str().c_str());
+	ns::printf(ns::ECHO, vars.str().c_str());
 }
 
 void cfgs_command(ns::Context& ctx) {
 	if (!std::filesystem::is_directory("./cfgs")) {
-		ns::print(ns::PrintLevel::ECHO, "cfgs folder is empty\n");
+		ns::print(ns::ECHO, "cfgs folder is empty\n");
 		return;
 	}
 
@@ -115,33 +113,35 @@ void cfgs_command(ns::Context& ctx) {
         out << entry.path() << '\n';
 	}
 
-	ns::print(ns::PrintLevel::ECHO, out.str().c_str());
+	ns::print(ns::ECHO, out.str().c_str());
 }
 
 void ex_command(ns::Context& ctx) {
-	if (!std::filesystem::is_directory("./examples")) {
-		ns::print(ns::PrintLevel::ECHO, "Examples folder is empty\n");
+	if (!std::filesystem::is_directory(NIKISCRIPT_CFG_ROOT_DIRECTORY"examples")) {
+		ns::print(ns::ECHO, "Examples folder is empty\n");
 		return;
 	}
 
 	std::stringstream out;
 	if (ctx.args.arguments.size() == 0) {
-		for (const auto& entry : std::filesystem::directory_iterator("./examples"))
+		for (const auto& entry : std::filesystem::directory_iterator(NIKISCRIPT_CFG_ROOT_DIRECTORY"examples"))
 			out << entry.path().filename() << '\n';
 
-		ns::print(ns::PrintLevel::ECHO, out.str().c_str());
+		ns::print(ns::ECHO, out.str().c_str());
 		return;
 	}
 
 	std::string& path = ctx.args.getString(0);
-	if (!isValidFileName(path))
+	if (std::filesystem::path(path).extension().string() != "cfg")
+		path += ".cfg";
+
+	if (!isSafeFileName(path))
 		return;
-
-	path = "./examples/"+path;
-
-	std::ifstream file{path};
+	path = "examples/"+path;
+	
+	std::ifstream file{NIKISCRIPT_CFG_ROOT_DIRECTORY+path};
 	if (!file) {
-		ns::printf(ns::PrintLevel::ERROR, "Could not load file \"{}\"\n", path);
+		ns::printf(ns::ERROR, "Could not load file \"{}\"\n", path);
 		return;
 	}
 
@@ -149,11 +149,11 @@ void ex_command(ns::Context& ctx) {
 	while (file.good()) {
 		std::string line = "";
 		std::getline(file, line);
-		out << line;
+		out << line << '\n';
 	}
 	out << '\n';
 
-	ns::printf(ns::PrintLevel::ECHO, out.str().c_str());
+	ns::printf(ns::ECHO, out.str().c_str());
 	ns::parseFile(ctx, path.c_str(), true);
 }
 
