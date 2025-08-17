@@ -59,10 +59,18 @@ async def passwordgen_command(interaction: discord.Interaction, args: list[str],
 	if not interaction.app_permissions.send_messages and not isOwner:
 		return
 
-	if len(args) != 2:
-		await interaction.channel.send(content='Usage: passwordgen s[master_key] s[password]')
+	length = 24
+	if len(args) == 3:
+		try:
+			length = int(args[2])
+		except ValueError:
+			await interaction.channel.send(content='length expected an integer number value')
+			return
+	elif len(args) != 2:
+		await interaction.channel.send(content='Usage: passwordgen s[master_key] s[password] i[length?]')
 		return
 
-	await interaction.channel.send(generatePassword(args[0], args[1]))
+
+	await interaction.channel.send(generatePassword(args[0], args[1], length))
 
 commands = {'help': help_command, 'say': say_command, 'math': math_command, 'passwordgen': passwordgen_command}

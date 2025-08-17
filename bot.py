@@ -47,8 +47,8 @@ async def script(interaction: discord.Interaction, script: str, hidden: bool=Tru
 @tree.command(name='passwordgen', description='Generates a password with a master key value and a password')
 @discord.app_commands.check(isOwner)
 @discord.app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
-async def passwordgen(interaction: discord.Interaction, master_key: str, password: str, hidden: bool=True):
+async def passwordgen(interaction: discord.Interaction, master_key: str, password: str, length: int = 24, hidden: bool=True):
 	await interaction.response.defer(ephemeral=hidden)
-	await interaction.edit_original_response(content=generatePassword(master_key, password))
+	await interaction.edit_original_response(content=generatePassword(master_key, password, length))
 
 client.run(os.getenv('DISCORD_BOT_TOKEN'))
