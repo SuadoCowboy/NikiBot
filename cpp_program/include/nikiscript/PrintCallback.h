@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <string>
 
+#include "DLL.h"
 #include "Utils.h"
 
 namespace ns {
@@ -13,27 +14,28 @@ namespace ns {
 		ERROR, ///< anything that went wrong and can not continue
 	};
 
-	const char* levelToString(PrintLevel level);
+	NS_API const char* levelToString(PrintLevel level);
 
 	typedef void(*PrintCallback)(void* pData, PrintLevel level, const char* message);
 
-	extern PrintCallback printCallback;
-	extern void* pPrintCallbackData;
+	extern NS_API PrintCallback printCallback;
+	extern NS_API void* pPrintCallbackData;
+
+	NS_API void setPrintCallback(void* pData, PrintCallback callback);
+	NS_API void print(PrintLevel level, const char* str);
+	NS_API void printUnknownCommand(const char* command);
 
 	template<typename... Args>
-	void printf(PrintLevel level, const char* format, Args ... args) {
-		print(level, formatString(format, args...).c_str());
+	void printf(PrintLevel level, const char* format, Args&& ... args) {
+		std::string formatted = formatString(format, args...);
+		ns::print(level, formatted.c_str());
 	}
 
-	void setPrintCallback(void* pData, PrintCallback callback);
-	void print(PrintLevel level, const char* str);
-	void printUnknownCommand(const char* command);
-
 	/**
-	 * @brief appends string to pBuffer
+	 * @brief appends string to pBuffer if level is PrintLevel::ECHO
 	 * @param pBuffer should be std::string*
-	 * @param level unused
+	 * @param level should be ECHO to be appended to the string
 	 * @param string string to append to pBuffer
 	 */
-	void printAppendToString(void* pBuffer, PrintLevel level, const char* string);
+	NS_API void printAppendToStringEchoOnly(void* pBuffer, PrintLevel level, const char* string);
 }

@@ -4,70 +4,104 @@
 
 #include "Context.h"
 
+#include "DLL.h"
+
 namespace ns {
+	NS_API void help(Context* pCtx, const std::string& name);
+
 	/**
 	 * @brief shows command usage
-	 * @param ctx
+	 * @param pCtx
 	 * @note s[command?]
 	 */
-	void help_command(Context& ctx);
+	NS_API void help_command(Context* pCtx, void*);
 
 	/**
 	 * @brief prints all the arguments passed
-	 * @param ctx
+	 * @param pCtx
 	 * @note s[message]
 	 */
-	void echo_command(Context& ctx);
+	NS_API void echo_command(Context* pCtx, void*);
 
 	/**
 	 * @brief creates a variable
-	 * @param ctx
-	 * @note s[name] s[value]
+	 * @param pCtx
+	 * @param name
+	 * @param value
+	 * @return true on success
+	 * @note if origin contains OriginType::REFERENCE then it will not print errors
 	 */
-	void var_command(Context& ctx);
+	NS_API bool var(Context* pCtx, const std::string& name, const std::string& value);
+
+	/**
+	 * @brief creates a variable
+	 * @param pCtx
+	 * @note s[name] s[value]
+	 * @see ns::var
+	 */
+	NS_API void var_command(Context* pCtx, void*);
+
+	NS_API void delvar(Context* pCtx, const std::string& name);
+
 	/**
 	 * @brief deletes a variable
-	 * @param ctx
+	 * @param pCtx
 	 * @note v[consoleVariable]
+	 * @see ns::delvar
 	 */
-	void delvar_command(Context& ctx);
+	NS_API void delvar_command(Context* pCtx, void*);
 
-	/**
-	 * @brief toggles a variable value between option1 and option2
-	 * @param ctx
-	 * @note v[variable] s[option1] s[option2]
-	 */
-	void toggle_command(Context& ctx);
-
-	/**
-	 * @brief parses a file as nikiscript
-	 * @param ctx
-	 * @note s[filePath]
-	 */
-	void exec_command(Context& ctx);
+	NS_API void incrementvar(Context* pCtx, const std::string& name, float min, float max, float delta);
 
 	/**
 	 * @brief increments a variable value
-	 * @param ctx
-	 * @note v[variable] n[min] n[max] n[delta?]
+	 * @param pCtx
+	 * @note v[variable] d[min] d[max] d[delta?]
+	 * @see ns::incrementvar
 	 */
-	void incrementvar_command(Context& ctx);
+	NS_API void incrementvar_command(Context* pCtx, void*);
+
+	/**
+	 * @brief toggles a variable value between option1 and option2
+	 * @param pCtx
+	 * @param variable
+	 * @param varName
+	 * @param option1
+	 * @param option2
+	 */
+	NS_API void toggle(Context* pCtx, const std::string& varName, const std::string& option1, const std::string& option2);
+
+	/**
+	 * @brief toggles a variable value between option1 and option2
+	 * @param pCtx
+	 * @note v[variable] s[option1] s[option2]
+	 * @see ns::toggle
+	 */
+	NS_API void toggle_command(Context* pCtx, void*);
+
+	/**
+	 * @brief parses a file as nikiscript
+	 * @param pCtx
+	 * @note s[filePath]
+	 * @see ns::parseFile
+	 */
+	NS_API void exec_command(Context* pCtx, void*);
 
 	/**
 	 * @brief adds default commands such as echo
-	 * @param ctx
-	 * @see echo_command
+	 * @param pCtx
+	 * @see ns::echo_command
 	 */
-	void registerCommands(Context& ctx);
+	NS_API void registerCommands(Context* pCtx);
 
 	/**
 	 * @brief creates a variable and stores it in ns::Context::programVariables
-	 * @param ctx
+	 * @param pCtx
 	 * @param name
 	 * @param description
 	 * @param pVar
 	 * @param get
 	 * @param set
 	 */
-	void registerVariable(Context& ctx, const std::string& name, const std::string& description, void* pVar, const GetProgramVariableValue& get, const SetProgramVariableValue& set);
+	NS_API void registerVariable(Context* pCtx, const std::string& name, const std::string& description, void* pVar, const GetProgramVariableValue& get, const SetProgramVariableValue& set);
 }

@@ -3,10 +3,9 @@
 #include <fstream>
 #include <filesystem>
 
-#define NIKISCRIPT_IMPLEMENTATION
-#include <nikiscript/PrintCallback.h>
-#include <nikiscript/Parser.h>
-#include <nikiscript/NikiScript.h>
+#include <NikiScript/PrintCallback.h>
+#include <NikiScript/Parser.h>
+#include <NikiScript/NikiScript.h>
 
 #include <Commands.h>
 
@@ -36,12 +35,21 @@ int main() {
 	ns::setPrintCallback(nullptr, nikiscriptPrintCallback);
 
 	ns::Context ctx{};
+	char cfgDirectory[] = "cfg";
+	ctx.cfgDirectory = cfgDirectory;
+
 	ctx.maxConsoleVariablesRecursiveDepth = 10;
 
-	::registerCommands(ctx);
-	ns::registerVariable(ctx, "cvars_calls_max", "how many variables can be called inside each other", &ctx.maxConsoleVariablesRecursiveDepth, ns::getNumber<uint16_t>, ns::setUnsigned<uint16_t>);
+	::registerCommands(&ctx);
+	ns::registerVariable(&ctx,
+		"cvars_calls_max",
+		"how many variables can be called inside each other",
+		&ctx.maxConsoleVariablesRecursiveDepth,
+		ns::getNumber<uint16_t>,
+		ns::setUnsigned<uint16_t>
+	);
 
-	ns::Lexer lexer;
+	ns::Lexer lexer{};
 	ctx.pLexer = &lexer;
 
 	while (true) {
@@ -56,7 +64,7 @@ int main() {
 		lexer.input.pop_back();
 
 		discord.clear();
-		ns::parse(ctx);
+		ns::parse(&ctx);
 		lexer.clear();
 
 		std::cout << "\nDISCORD\n" << discord << "\nEND\n";

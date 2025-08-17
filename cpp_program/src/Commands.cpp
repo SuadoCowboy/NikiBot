@@ -33,42 +33,44 @@ static bool isSafeFileName(const std::string& name) {
 	return true;
 }
 
-void registerCommands(ns::Context& ctx) {
-	ns::registerCommands(ctx);
-	ctx.commands.remove(ctx, "remove");
-	ctx.commands.add(ns::Command("exec", 1,1, exec_command, "parses a script file", {"s[fileName]", "file to parse"}));
-	ctx.commands.add(ns::Command("save", 1,1, save_command, "saves console variables in a file", {"s[fileName]", "file to store data"}));
-	ctx.commands.add(ns::Command("vars", 0,0, vars_command, "prints out current stored console variables and their values", {}));
-	ctx.commands.add(ns::Command("pvars", 0,0, pvars_command, "prints out current stored program variables and their values", {}));
-	ctx.commands.add(ns::Command("cfgs", 0,0, cfgs_command, "prints out cfgs folder content", {}));
-	ctx.commands.add(ns::Command("ex", 0,1, ex_command, "shows examples or run the chosen example", {"s[path?]", "path to example"}));
+void registerCommands(ns::Context* pCtx) {
+	ns::registerCommands(pCtx);
+	pCtx->commands.remove(pCtx, "exec");
 
-	ctx.commands.add(ns::Command("dc", 1,1, dc_command, "passes a string for the bot to run", {"s[text]", "text to pass as a command"}));
-	ctx.commands.add(ns::Command("rcon", 1,1, rcon_command, "run system command", {"s[text]", "text to run on environment"}));
+	nsRegisterCommand(pCtx, "exec", 1,1, exec_command, "parses a script file", {"s[fileName]", "file to parse"});
+	nsRegisterCommand(pCtx, "save", 1,1, save_command, "saves console variables in a file", {"s[fileName]", "file to store data"});
+	nsRegisterCommand(pCtx, "vars", 0,0, vars_command, "prints out current stored console variables and their values", {});
+	nsRegisterCommand(pCtx, "pvars", 0,0, pvars_command, "prints out current stored program variables and their values", {});
+	nsRegisterCommand(pCtx, "cfgs", 0,0, cfgs_command, "prints out cfgs folder content", {});
+	nsRegisterCommand(pCtx, "ex", 0,1, ex_command, "shows examples or run the chosen example", {"s[path?]", "path to example"});
+
+	nsRegisterCommand(pCtx, "dc", 1,1, dc_command, "passes a string for the bot to run", {"s[text]", "text to pass as a command"});
+	nsRegisterCommand(pCtx, "rcon", 1,1, rcon_command, "run system command", {"s[text]", "text to run on environment"});
 }
 
-void exec_command(ns::Context& ctx) {
-	std::string& path = ctx.args.getString(0);
+void exec_command(ns::Context* pCtx, void*) {
+	std::string& path = pCtx->args.getString(0);
 
 	if (!isSafeFileName(path))
 		return;
 
-	ns::parseFile(ctx, path.c_str(), true);
+	ns::parseFile(pCtx, path.c_str(), true);
 }
 
-void save_command(ns::Context& ctx) {
-	if (!std::filesystem::exists("./" NIKISCRIPT_CFG_ROOT_DIRECTORY))
-		std::filesystem::create_directory("./" NIKISCRIPT_CFG_ROOT_DIRECTORY);
+void save_command(ns::Context* pCtx, void*) {
+	std::filesystem::path cfgPath(pCtx->cfgDirectory);
+	if (!std::filesystem::exists("./"/cfgPath))
+		std::filesystem::create_directory("./"/cfgPath);
 
-	const std::string& path = ctx.args.getString(0);
+	const std::string& path = pCtx->args.getString(0);
 	if (!isSafeFileName(path))
 		return;
 
-	ns::Context tempCtx = ns::deepCopyContext(ctx);
-	ns::parseFile(tempCtx, path.c_str(), false);
+	ns::Context tempCtx = ns::deepCopyContext(pCtx);
+	ns::parseFile(&tempCtx, path.c_str(), false);
 
 	std::ofstream file{path};
-	for (auto& variable : ctx.consoleVariables) {
+	for (auto& variable : pCtx->consoleVariables) {
 		if (tempCtx.consoleVariables.count(variable.first) != 0) {
 			tempCtx.consoleVariables[variable.first] = variable.second;
 			break;
@@ -83,23 +85,23 @@ void save_command(ns::Context& ctx) {
 	ns::printf(ns::ECHO, "Stored variables in \"{}\"", path);
 }
 
-void vars_command(ns::Context& ctx) {
+void vars_command(ns::Context* pCtx, void*) {
 	std::stringstream vars;
-	for (auto& var : ctx.consoleVariables)
+	for (auto& var : pCtx->consoleVariables)
 		vars << var.first << " = " << var.second << '\n';
 
 	ns::printf(ns::ECHO, vars.str().c_str());
 }
 
-void pvars_command(ns::Context& ctx) {
+void pvars_command(ns::Context* pCtx, void*) {
 	std::stringstream vars;
-	for (auto& var : ctx.programVariables)
-		vars << var.first << " = " << var.second.get(ctx, &var.second) << '\n';
+	for (auto& var : pCtx->programVariables)
+		vars << var.first << " = " << var.second.get(pCtx, &var.second) << '\n';
 
 	ns::printf(ns::ECHO, vars.str().c_str());
 }
 
-void cfgs_command(ns::Context& ctx) {
+void cfgs_command(ns::Context* pCtx, void*) {
 	if (!std::filesystem::is_directory("./cfgs")) {
 		ns::print(ns::ECHO, "cfgs folder is empty\n");
 		return;
@@ -116,22 +118,23 @@ void cfgs_command(ns::Context& ctx) {
 	ns::print(ns::ECHO, out.str().c_str());
 }
 
-void ex_command(ns::Context& ctx) {
-	if (!std::filesystem::is_directory(NIKISCRIPT_CFG_ROOT_DIRECTORY"examples")) {
+void ex_command(ns::Context* pCtx, void*) {
+	std::filesystem::path cfgPath(pCtx->cfgDirectory);
+	if (!std::filesystem::is_directory(cfgPath/"examples")) {
 		ns::print(ns::ECHO, "Examples folder is empty\n");
 		return;
 	}
 
 	std::stringstream out;
-	if (ctx.args.arguments.size() == 0) {
-		for (const auto& entry : std::filesystem::directory_iterator(NIKISCRIPT_CFG_ROOT_DIRECTORY"examples"))
+	if (pCtx->args.arguments.size() == 0) {
+		for (const auto& entry : std::filesystem::directory_iterator(cfgPath/"examples"))
 			out << entry.path().filename() << '\n';
 
 		ns::print(ns::ECHO, out.str().c_str());
 		return;
 	}
 
-	std::string& path = ctx.args.getString(0);
+	std::string& path = pCtx->args.getString(0);
 	if (std::filesystem::path(path).extension().string() != "cfg")
 		path += ".cfg";
 
@@ -139,7 +142,7 @@ void ex_command(ns::Context& ctx) {
 		return;
 	path = "examples/"+path;
 	
-	std::ifstream file{NIKISCRIPT_CFG_ROOT_DIRECTORY+path};
+	std::ifstream file{cfgPath/path};
 	if (!file) {
 		ns::printf(ns::ERROR, "Could not load file \"{}\"\n", path);
 		return;
@@ -154,17 +157,17 @@ void ex_command(ns::Context& ctx) {
 	out << '\n';
 
 	ns::printf(ns::ECHO, out.str().c_str());
-	ns::parseFile(ctx, path.c_str(), true);
+	ns::parseFile(pCtx, path.c_str(), true);
 }
 
 
-void dc_command(ns::Context& ctx) {
-	discord += ctx.args.getString(0) + '\n';
+void dc_command(ns::Context* pCtx, void*) {
+	discord += pCtx->args.getString(0) + '\n';
 }
 
-void rcon_command(ns::Context& ctx) {
+void rcon_command(ns::Context* pCtx, void*) {
 	if (!isUserOwner())
 		return;
 
-	system(ctx.args.getString(0).c_str());
+	int _ = system(pCtx->args.getString(0).c_str());
 }

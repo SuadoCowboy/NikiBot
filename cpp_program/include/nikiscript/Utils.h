@@ -4,26 +4,28 @@
 #include <string>
 #include <sstream>
 
+#include "DLL.h"
+
 namespace ns {
 	/**
 	 * @warning this function is not meant to be used outside this header
 	 * @tparam  
-	 * @param format 
-	 * @param buf 
+	 * @param format
+	 * @param buf
 	 */
-	 template<typename ...>
+	template<typename ...>
 	static void _formatStringValue(const std::string& format, std::stringstream& buf) {
 		buf << format;
 	}
 
 	/**
 	 * @warning this function is not meant to be used outside this header
-	 * @tparam T 
-	 * @tparam Args 
-	 * @param format 
-	 * @param buf 
-	 * @param value 
-	 * @param args 
+	 * @tparam T
+	 * @tparam Args
+	 * @param format
+	 * @param buf
+	 * @param value
+	 * @param args
 	 */
 	template<typename T, typename ... Args>
 	static void _formatStringValue(const std::string& format, std::stringstream& buf, T value, Args& ... args) {
@@ -40,10 +42,10 @@ namespace ns {
 
 	/**
 	 * @brief format string using {}. Example: `formatString("Hello, {}!", "World")` -> `"Hello, World!"`
-	 * @tparam Args 
-	 * @param format 
-	 * @param args 
-	 * @return std::string 
+	 * @tparam Args
+	 * @param format
+	 * @param args
+	 * @return std::string
 	 */
 	template<typename ... Args>
 	std::string formatString(const std::string& format, Args ... args) {
@@ -59,7 +61,7 @@ namespace ns {
 	  * @see ns::rtrim
 	  * @note https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring
 	  */
-	void ltrim(std::string &s);
+	NS_API void ltrim(std::string &s);
 	
 	/**
 	 * @brief trim from end
@@ -68,7 +70,7 @@ namespace ns {
 	 * @see ns::ltrim
 	 * @note https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring
 	 */
-	void rtrim(std::string &s);
+	NS_API void rtrim(std::string &s);
 	
 	/**
 	 * @brief trim from start and end
@@ -77,7 +79,7 @@ namespace ns {
 	 * @see ns::rtrim
 	 * @note https://stackoverflow.com/questions/216823/how-to-trim-a-stdstring
 	 */
-	void trim(std::string& s);
+	NS_API void trim(std::string& s);
 
 	/**
 	 * @brief call isspace but does not accept newline
@@ -85,5 +87,5 @@ namespace ns {
 	 * @return true if is space
 	 * @return false if is not space
 	 */
-	bool isSpaceNotNewline(char c);
+	NS_API bool isSpaceNotNewline(char c);
 }
