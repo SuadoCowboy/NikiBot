@@ -168,5 +168,5 @@ void rcon_command(ns::Context* pCtx, void*) {
 	if (!isUserOwner())
 		return;
 
-	[[discard]]system(pCtx->args.getString(0).c_str());
+	system(pCtx->args.getString(0).c_str());
 }
