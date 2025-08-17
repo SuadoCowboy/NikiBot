@@ -1,7 +1,6 @@
 import discord
 import math
-import hashlib
-import base64
+from password_generator import generatePassword
 from constants import *
 import niki_process
 
@@ -64,6 +63,6 @@ async def passwordgen_command(interaction: discord.Interaction, args: list[str],
 		await interaction.channel.send(content='Usage: passwordgen s[master_key] s[password]')
 		return
 
-	await interaction.channel.send(base64.urlsafe_b64encode(hashlib.pbkdf2_hmac("sha256", args[0].encode("utf-8"), args[1].encode("utf-8"), 100000)).decode("utf-8")[:32])
+	await interaction.channel.send(generatePassword(args[0], args[1]))
 
 commands = {'help': help_command, 'say': say_command, 'math': math_command, 'passwordgen': passwordgen_command}

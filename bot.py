@@ -2,6 +2,7 @@ import discord
 import os
 from constants import *
 from niki_process import *
+from password_generator import generatePassword
 
 startNikiCMD()
 
@@ -42,5 +43,12 @@ async def script(interaction: discord.Interaction, script: str):
 async def script(interaction: discord.Interaction, script: str, hidden: bool=True):
 	await interaction.response.defer(ephemeral=hidden)
 	await runNikiScript(interaction, script)
+
+@tree.command(name='passwordgen', description='Generates a password with a master key value and a password')
+@discord.app_commands.check(isOwner)
+@discord.app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+async def passwordgen(interaction: discord.Interaction, master_key: str, password: str, hidden: bool=True):
+	await interaction.response.defer(ephemeral=hidden)
+	await interaction.response.edit_message(content=generatePassword(master_key, password))
 
 client.run(os.getenv('DISCORD_BOT_TOKEN'))
