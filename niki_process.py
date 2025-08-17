@@ -97,8 +97,8 @@ async def parseDiscordCommands(interaction: discord.Interaction, discordCommands
 async def runNikiScript(interaction: discord.Interaction, script: str):
 	embed = discord.Embed(color=discord.Colour(0xffc6ff))
 
-	if len(script) > 1017: # counting ````` => -6
-		await interaction.response.edit_message(content="Script must be 1017 or fewer in length")
+	if len(script) > 1017: # counting `````` => -6
+		await interaction.edit_original_response(content="Script must be 1017 or fewer in length")
 		return
 
 	embed.add_field(name="In", value=f'```{script}```', inline=False)

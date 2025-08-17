@@ -49,6 +49,6 @@ async def script(interaction: discord.Interaction, script: str, hidden: bool=Tru
 @discord.app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
 async def passwordgen(interaction: discord.Interaction, master_key: str, password: str, hidden: bool=True):
 	await interaction.response.defer(ephemeral=hidden)
-	await interaction.response.edit_message(content=generatePassword(master_key, password))
+	await interaction.edit_original_response(content=generatePassword(master_key, password))
 
 client.run(os.getenv('DISCORD_BOT_TOKEN'))
