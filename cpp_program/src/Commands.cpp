@@ -37,15 +37,14 @@ void registerCommands(ns::Context* pCtx) {
 	ns::registerCommands(pCtx);
 	pCtx->commands.remove(pCtx, "exec");
 
-	nsRegisterCommand(pCtx, "exec", 1,1, exec_command, "parses a script file", {"s[fileName]", "file to parse"});
-	nsRegisterCommand(pCtx, "save", 1,1, save_command, "saves console variables in a file", {"s[fileName]", "file to store data"});
-	nsRegisterCommand(pCtx, "vars", 0,0, vars_command, "prints out current stored console variables and their values", {});
-	nsRegisterCommand(pCtx, "pvars", 0,0, pvars_command, "prints out current stored program variables and their values", {});
-	nsRegisterCommand(pCtx, "cfgs", 0,0, cfgs_command, "prints out cfgs folder content", {});
-	nsRegisterCommand(pCtx, "ex", 0,1, ex_command, "shows examples or run the chosen example", {"s[path?]", "path to example"});
-
-	nsRegisterCommand(pCtx, "dc", 1,1, dc_command, "passes a string for the bot to run", {"s[text]", "text to pass as a command"});
-	nsRegisterCommand(pCtx, "rcon", 1,1, rcon_command, "run system command", {"s[text]", "text to run on environment"});
+	nsRegisterCommand(pCtx, "exec", 1,1, exec_command, "parses a script file", "s[fileName]", "file to parse");
+	nsRegisterCommand(pCtx, "save", 1,1, save_command, "saves console variables in a file", "s[fileName]", "file to store data");
+	nsRegisterCommand(pCtx, "vars", 0,0, vars_command, "prints out current stored console variables and their values");
+	nsRegisterCommand(pCtx, "pvars", 0,0, pvars_command, "prints out current stored program variables and their values");
+	nsRegisterCommand(pCtx, "cfgs", 0,0, cfgs_command, "prints out cfgs folder content");
+	nsRegisterCommand(pCtx, "ex", 0,1, ex_command, "shows examples or run the chosen example", "s[path?]", "path to example");
+	nsRegisterCommand(pCtx, "dc", 1,1, dc_command, "passes a string for the bot to run", "s[text]", "text to pass as a command");
+	nsRegisterCommand(pCtx, "rcon", 1,1, rcon_command, "run system command", "s[text]", "text to run on environment");
 }
 
 void exec_command(ns::Context* pCtx, void*) {
@@ -169,5 +168,5 @@ void rcon_command(ns::Context* pCtx, void*) {
 	if (!isUserOwner())
 		return;
 
-	int _ = system(pCtx->args.getString(0).c_str());
+	[[discard]]system(pCtx->args.getString(0).c_str());
 }

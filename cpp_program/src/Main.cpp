@@ -35,6 +35,9 @@ int main() {
 	ns::setPrintCallback(nullptr, nikiscriptPrintCallback);
 
 	ns::Context ctx{};
+	ns::Lexer lexer{};
+	ctx.pLexer = &lexer;
+
 	char cfgDirectory[] = "cfg";
 	ctx.cfgDirectory = cfgDirectory;
 
@@ -48,9 +51,6 @@ int main() {
 		ns::getNumber<uint16_t>,
 		ns::setUnsigned<uint16_t>
 	);
-
-	ns::Lexer lexer{};
-	ctx.pLexer = &lexer;
 
 	while (true) {
 		std::getline(std::cin, lexer.input);
