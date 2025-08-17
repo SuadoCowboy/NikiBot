@@ -4,9 +4,9 @@
 #include <sstream>
 #include <fstream>
 
-#include <nikiscript/PrintCallback.h>
-#include <nikiscript/Parser.h>
-#include <nikiscript/NikiScript.h>
+#include <NikiScript/PrintCallback.h>
+#include <NikiScript/Parser.h>
+#include <NikiScript/NikiScript.h>
 
 bool isOwner = false;
 std::string discord;

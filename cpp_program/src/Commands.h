@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <nikiscript/Context.h>
+#include <NikiScript/Context.h>
 
 extern bool isOwner; ///< if the current input is from one of the owners
 extern std::string discord; ///< string for the bot to parse
